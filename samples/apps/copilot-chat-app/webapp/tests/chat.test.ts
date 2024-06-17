@@ -7,7 +7,8 @@ a response.
 */
 test('get response from bot', async ({ page }) => {
     // Make sure the server is running.
-    await page.goto('https://localhost:40443/healthz');
+const healthCheckUrl = process.env.HEALTH_CHECK_URL || 'https://localhost:40443/healthz';
+await page.goto(healthCheckUrl);
     expect(page.getByText('Healthy')).toBeDefined();
 
     await page.goto('/');
