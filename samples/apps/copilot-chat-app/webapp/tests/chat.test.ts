@@ -25,7 +25,8 @@ await page.goto(healthCheckUrl);
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // Select No if asked to stay signed in.
-    const isAskingStaySignedIn = await page.$$("text='Stay signed in?'");
+    const isAskingStaySignedIn = await page.locator('text=Stay signed in?').count();
+    if (isAskingStaySignedIn > 0) {
     if (isAskingStaySignedIn) {
         await page.getByRole('button', { name: 'No' }).click();
     }
