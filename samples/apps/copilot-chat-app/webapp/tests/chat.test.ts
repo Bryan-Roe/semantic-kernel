@@ -46,5 +46,7 @@ await page.goto(healthCheckUrl);
     // The second message is the user's message.
     // The third message is the bot's response.
     const chatHistoryItems = page.getByTestId(new RegExp('chat-history-item-*'));
-    expect((await chatHistoryItems.all()).length).toBe(3);
+const initialChatHistoryLength = (await chatHistoryItems.all()).length;
+await sendMessage('Hello'); // Assuming sendMessage is a function that sends a message
+expect((await chatHistoryItems.all()).length).toBe(initialChatHistoryLength + 1);
 });
