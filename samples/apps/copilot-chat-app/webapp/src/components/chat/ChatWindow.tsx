@@ -78,7 +78,7 @@ const useClasses = makeStyles({
     // },
         width: '100%',
     },
-    buttons: {
+    // buttons: {
         display: 'flex',
         alignSelf: 'end',
         ...shorthands.gap(tokens.spacingVerticalS),
