@@ -73,7 +73,9 @@ const useClasses = makeStyles({
         ...shorthands.gap(tokens.spacingVerticalMNudge),
         width: '398px',
     },
-    input: {
+    // input: {
+    //     width: '100%',
+    // },
         width: '100%',
     },
     buttons: {
