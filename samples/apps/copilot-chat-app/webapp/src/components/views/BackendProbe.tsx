@@ -10,6 +10,12 @@ interface IData {
 
 const BackendProbe: FC<IData> = ({ uri, onBackendFound }) => {
     useEffect(() => {
+        const requestUrl = new URL('healthz', uri);
+        const fetchAsync = async () => {
+            // Your existing code here
+        };
+        fetchAsync();
+    }, [uri]);
         const timer = setInterval(() => {
             const requestUrl = new URL('healthz', uri);
             const fetchAsync = async () => {
