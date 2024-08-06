@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -31,15 +31,15 @@ public class AgentChatTests
         await this.VerifyHistoryAsync(expectedCount: 0, chat.GetChatMessagesAsync(chat.Agent)); // Agent history
 
         // Inject history
-        chat.AddChatMessages([new ChatMessageContent(AuthorRole.User, "More")]);
-        chat.AddChatMessages([new ChatMessageContent(AuthorRole.User, "And then some")]);
+        chat.Add([new ChatMessageContent(AuthorRole.User, "More")]);
+        chat.Add([new ChatMessageContent(AuthorRole.User, "And then some")]);
 
         // Verify updated history
         await this.VerifyHistoryAsync(expectedCount: 2, chat.GetChatMessagesAsync()); // Primary history
         await this.VerifyHistoryAsync(expectedCount: 0, chat.GetChatMessagesAsync(chat.Agent)); // Agent hasn't joined
 
         // Invoke with input & verify (agent joins chat)
-        chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, "hi"));
+        chat.Add(new ChatMessageContent(AuthorRole.User, "hi"));
         await chat.InvokeAsync().ToArrayAsync();
         Assert.Equal(1, chat.Agent.InvokeCount);
 
@@ -136,6 +136,7 @@ public class AgentChatTests
 
         public override async IAsyncEnumerable<ChatMessageContent> InvokeAsync(
             ChatHistory history,
+            IReadOnlyList<ChatMessageContent> history,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.Delay(0, cancellationToken);

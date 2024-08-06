@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -131,9 +131,9 @@ public abstract class AgentChat
     /// Any <see cref="AgentChat" /> instance does not support concurrent invocation and
     /// will throw exception if concurrent activity is attempted.
     /// </remarks>
-    public void AddChatMessage(ChatMessageContent message)
+    public void Add(ChatMessageContent message)
     {
-        this.AddChatMessages([message]);
+        this.Add([message]);
     }
 
     /// <summary>
@@ -151,7 +151,7 @@ public abstract class AgentChat
     /// Any <see cref="AgentChat" /> instance does not support concurrent invocation and
     /// will throw exception if concurrent activity is attempted.
     /// </remarks>
-    public void AddChatMessages(IReadOnlyList<ChatMessageContent> messages)
+    public void Add(IReadOnlyList<ChatMessageContent> messages)
     {
         this.SetActivityOrThrow(); // Disallow concurrent access to chat history
 
@@ -163,6 +163,10 @@ public abstract class AgentChat
             }
         }
 
+        if (this.Logger.IsEnabled(LogLevel.Debug)) // Avoid boxing if not enabled
+        {
+            this.Logger.LogDebug("[{MethodName}] Adding Messages: {MessageCount}", nameof(Add), messages.Count);
+        }
         this.Logger.LogAgentChatAddingMessages(nameof(AddChatMessages), messages.Count);
 
         try
@@ -175,6 +179,10 @@ public abstract class AgentChat
             var channelRefs = this._agentChannels.Select(kvp => new ChannelReference(kvp.Value, kvp.Key));
             this._broadcastQueue.Enqueue(channelRefs, messages);
 
+            if (this.Logger.IsEnabled(LogLevel.Information)) // Avoid boxing if not enabled
+            {
+                this.Logger.LogInformation("[{MethodName}] Added Messages: {MessageCount}", nameof(Add), messages.Count);
+            }
             this.Logger.LogAgentChatAddedMessages(nameof(AddChatMessages), messages.Count);
         }
         finally
@@ -220,6 +228,8 @@ public abstract class AgentChat
                 this.History.Add(message);
 
                 if (isVisible)
+                // Don't expose function-call and function-result messages to caller.
+                if (message.Items.All(i => i is FunctionCallContent || i is FunctionResultContent))
                 {
                     // Yield message to caller
                     yield return message;
@@ -232,7 +242,7 @@ public abstract class AgentChat
                 this._agentChannels
                     .Where(kvp => kvp.Value != channel)
                     .Select(kvp => new ChannelReference(kvp.Value, kvp.Key));
-            this._broadcastQueue.Enqueue(channelRefs, messages);
+            this._broadcastQueue.Enqueue(channelRefs, messages.Where(m => m.Role != AuthorRole.Tool).ToArray());
 
             this.Logger.LogAgentChatInvokedAgent(nameof(InvokeAgentAsync), agent.GetType(), agent.Id);
         }

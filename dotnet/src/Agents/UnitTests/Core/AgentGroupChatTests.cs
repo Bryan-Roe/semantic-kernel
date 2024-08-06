@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +47,7 @@ public class AgentGroupChatTests
         AgentGroupChat chat = new(agent1, agent2);
         Assert.Equal(2, chat.Agents.Count);
 
-        chat.AddAgent(agent3);
+        chat.Add(agent3);
         Assert.Equal(3, chat.Agents.Count);
 
         var messages = await chat.InvokeAsync(agent4, isJoining: false).ToArrayAsync();
@@ -199,6 +199,7 @@ public class AgentGroupChatTests
 
         ChatMessageContent[] messages = [new ChatMessageContent(AuthorRole.Assistant, "test")];
         agent.Setup(a => a.InvokeAsync(It.IsAny<ChatHistory>(), It.IsAny<CancellationToken>())).Returns(() => messages.ToAsyncEnumerable());
+        agent.Setup(a => a.InvokeAsync(It.IsAny<IReadOnlyList<ChatMessageContent>>(), It.IsAny<CancellationToken>())).Returns(() => messages.ToAsyncEnumerable());
 
         return agent;
     }

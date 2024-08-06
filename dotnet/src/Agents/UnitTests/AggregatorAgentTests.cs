@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,7 +44,7 @@ public class AggregatorAgentTests
         AgentGroupChat uberChat = new();
 
         // Add message to outer chat (no agent has joined)
-        uberChat.AddChatMessage(new ChatMessageContent(AuthorRole.User, "test uber"));
+        uberChat.Add(new ChatMessageContent(AuthorRole.User, "test uber"));
 
         var messages = await uberChat.GetChatMessagesAsync().ToArrayAsync();
         Assert.Single(messages);
@@ -56,7 +56,7 @@ public class AggregatorAgentTests
         Assert.Empty(messages); // Agent hasn't joined chat, no broadcast
 
         // Add message to inner chat (not visible to parent)
-        groupChat.AddChatMessage(new ChatMessageContent(AuthorRole.User, "test inner"));
+        groupChat.Add(new ChatMessageContent(AuthorRole.User, "test inner"));
 
         messages = await uberChat.GetChatMessagesAsync().ToArrayAsync();
         Assert.Single(messages);
@@ -87,6 +87,7 @@ public class AggregatorAgentTests
 
         ChatMessageContent[] messages = [new ChatMessageContent(AuthorRole.Assistant, "test agent")];
         agent.Setup(a => a.InvokeAsync(It.IsAny<ChatHistory>(), It.IsAny<CancellationToken>())).Returns(() => messages.ToAsyncEnumerable());
+        agent.Setup(a => a.InvokeAsync(It.IsAny<IReadOnlyList<ChatMessageContent>>(), It.IsAny<CancellationToken>())).Returns(() => messages.ToAsyncEnumerable());
 
         return agent;
     }
