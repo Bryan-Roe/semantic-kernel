@@ -18,7 +18,7 @@ from semantic_kernel.exceptions.service_exceptions import (
 def test_embedding_with_env_variables(mistralai_unit_test_env):
     text_embedding = MistralAITextEmbedding()
     assert text_embedding.ai_model_id == "test_embedding_model_id"
-    assert text_embedding.client._api_key == "test_api_key"
+    assert text_embedding.async_client._api_key == "test_api_key"
 
 
 @pytest.mark.parametrize(
@@ -32,35 +32,125 @@ def test_embedding_with_constructor(mistralai_unit_test_env):
         ai_model_id="overwrite-model",
     )
     assert text_embedding.ai_model_id == "overwrite-model"
-    assert text_embedding.client._api_key == "overwrite-api-key"
+    assert text_embedding.async_client._api_key == "overwrite-api-key"
 
 
 def test_embedding_with_client(mistralai_unit_test_env):
     client = MagicMock(spec=MistralAsyncClient)
-    text_embedding = MistralAITextEmbedding(client=client)
-    assert text_embedding.client == client
+    text_embedding = MistralAITextEmbedding(async_client=client)
+    assert text_embedding.async_client == client
     assert text_embedding.ai_model_id == "test_embedding_model_id"
 
 
 def test_embedding_with_api_key(mistralai_unit_test_env):
     text_embedding = MistralAITextEmbedding(api_key="overwrite-api-key")
-    assert text_embedding.client._api_key == "overwrite-api-key"
+    assert text_embedding.async_client._api_key == "overwrite-api-key"
     assert text_embedding.ai_model_id == "test_embedding_model_id"
 
 
 def test_embedding_with_model(mistralai_unit_test_env):
     text_embedding = MistralAITextEmbedding(ai_model_id="overwrite-model")
     assert text_embedding.ai_model_id == "overwrite-model"
-    assert text_embedding.client._api_key == "test_api_key"
+    assert text_embedding.async_client._api_key == "test_api_key"
 
 
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+<<<<<<< main
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+=======
+<<<<<<< main
+>>>>>>> main
+>>>>>>> Stashed changes
 @pytest.mark.parametrize(
     "exclude_list", [["MISTRALAI_EMBEDDING_MODEL_ID"]], indirect=True
 )
+=======
+@pytest.mark.parametrize("exclude_list", [["MISTRALAI_EMBEDDING_MODEL_ID"]], indirect=True)
+>>>>>>> upstream/main
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+=======
+@pytest.mark.parametrize("exclude_list", [["MISTRALAI_EMBEDDING_MODEL_ID"]], indirect=True)
+>>>>>>> ms/features/bugbash-prep
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+=======
+@pytest.mark.parametrize("exclude_list", [["MISTRALAI_EMBEDDING_MODEL_ID"]], indirect=True)
+>>>>>>> ms/features/bugbash-prep
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
 def test_embedding_with_model_without_env(mistralai_unit_test_env):
     text_embedding = MistralAITextEmbedding(ai_model_id="overwrite-model")
     assert text_embedding.ai_model_id == "overwrite-model"
-    assert text_embedding.client._api_key == "test_api_key"
+    assert text_embedding.async_client._api_key == "test_api_key"
 
 
 @pytest.mark.parametrize(
@@ -113,7 +203,7 @@ async def test_embedding_generate_raw_embedding(mistralai_unit_test_env):
         spec=EmbeddingResponse, data=[MagicMock(embedding=[1, 2, 3, 4, 5])]
     )
     mock_client.embeddings.return_value = mock_embedding_response
-    text_embedding = MistralAITextEmbedding(client=mock_client)
+    text_embedding = MistralAITextEmbedding(async_client=mock_client)
     embedding = await text_embedding.generate_raw_embeddings(["test"])
     assert embedding == [[1, 2, 3, 4, 5]]
 
@@ -125,7 +215,7 @@ async def test_embedding_generate_embedding(mistralai_unit_test_env):
         spec=EmbeddingResponse, data=[MagicMock(embedding=[1, 2, 3, 4, 5])]
     )
     mock_client.embeddings.return_value = mock_embedding_response
-    text_embedding = MistralAITextEmbedding(client=mock_client)
+    text_embedding = MistralAITextEmbedding(async_client=mock_client)
     embedding = await text_embedding.generate_embeddings(["test"])
     assert embedding.tolist() == [[1, 2, 3, 4, 5]]
 
@@ -134,6 +224,6 @@ async def test_embedding_generate_embedding(mistralai_unit_test_env):
 async def test_embedding_generate_embedding_exception(mistralai_unit_test_env):
     mock_client = AsyncMock(spec=MistralAsyncClient)
     mock_client.embeddings.side_effect = Exception("Test Exception")
-    text_embedding = MistralAITextEmbedding(client=mock_client)
+    text_embedding = MistralAITextEmbedding(async_client=mock_client)
     with pytest.raises(ServiceResponseException):
         await text_embedding.generate_embeddings(["test"])

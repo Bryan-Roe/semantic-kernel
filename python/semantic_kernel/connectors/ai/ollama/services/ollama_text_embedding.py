@@ -34,8 +34,62 @@ from semantic_kernel.utils.experimental_decorator import experimental_class
 logger: logging.Logger = logging.getLogger(__name__)
 
 
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 @experimental_class
 class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+@experimental_class
+class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+@experimental_class
+class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+@experimental_class
+class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
+=======
+class OllamaTextEmbedding(EmbeddingGeneratorBase):
+>>>>>>> ms/small_fixes
+<<<<<<< Updated upstream
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
     """Ollama embeddings client.
 
     Make sure to have the ollama service running either locally or remotely.
@@ -103,6 +157,15 @@ class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
 
         result = []
         for text in texts:
+            async with AsyncSession(self.session) as session:
+                async with session.post(
+                    self.url,
+                    json={"model": self.ai_model_id, "prompt": text, "options": kwargs},
+                ) as response:
+                response.raise_for_status()
+                response = await response.json()
+                result.append(response["embedding"])
+        return array(result)
             response_object = await self.client.embeddings(
                 model=self.ai_model_id,
                 prompt=text,

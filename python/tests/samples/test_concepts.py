@@ -38,6 +38,7 @@ from samples.concepts.filtering.function_invocation_filters_stream import (
 from samples.concepts.filtering.prompt_filters import main as prompt_filters
 from samples.concepts.functions.kernel_arguments import main as kernel_arguments
 from samples.concepts.grounding.grounded import main as grounded
+<<<<<<< main
 from samples.concepts.local_models.lm_studio_chat_completion import (
     main as lm_studio_chat_completion,
 )
@@ -50,6 +51,13 @@ from samples.concepts.local_models.ollama_chat_completion import (
 from samples.concepts.memory.azure_cognitive_search_memory import (
     main as azure_cognitive_search_memory,
 )
+=======
+from samples.concepts.images.image_generation import main as image_generation
+from samples.concepts.local_models.lm_studio_chat_completion import main as lm_studio_chat_completion
+from samples.concepts.local_models.lm_studio_text_embedding import main as lm_studio_text_embedding
+from samples.concepts.local_models.ollama_chat_completion import main as ollama_chat_completion
+from samples.concepts.memory.azure_cognitive_search_memory import main as azure_cognitive_search_memory
+>>>>>>> upstream/main
 from samples.concepts.memory.memory import main as memory
 from samples.concepts.planners.azure_openai_function_calling_stepwise_planner import (
     main as azure_openai_function_calling_stepwise_planner,
@@ -88,7 +96,10 @@ from samples.concepts.service_selector.custom_service_selector import (
 )
 from samples.getting_started_with_agents.step1_agent import main as step1_agent
 from samples.getting_started_with_agents.step2_plugins import main as step2_plugins
+from samples.getting_started_with_agents.step3_chat import main as step3_chat
+from samples.getting_started_with_agents.step7_assistant import main as step7_assistant
 from tests.samples.samples_utils import retry
+from tests.samples.test_samples_utils import retry
 
 concepts = [
     param(
@@ -156,6 +167,7 @@ concepts = [
             reason="Temporarily: https://www.klarna.com/us/shopping/public/openai/v0/api-docs/ returns 404"
         ),
     ),
+    param(openai_plugin_klarna, [], id="openai_plugin_klarna"),
     param(plugins_from_dir, [], id="plugins_from_dir"),
     param(
         azure_chat_gpt_api_handlebars,
@@ -186,6 +198,8 @@ concepts = [
     ),
     param(step1_agent, [], id="step1_agent"),
     param(step2_plugins, [], id="step2_agent_plugins"),
+    param(step3_chat, [], id="step3_chat"),
+    param(step7_assistant, [], id="step7_assistant"),
     param(
         ollama_chat_completion,
         ["Why is the sky blue?", "exit"],
@@ -210,6 +224,7 @@ concepts = [
             reason="Need to set up LM Studio locally. Check out the module for more details."
         ),
     ),
+    param(image_generation, [], id="image_generation"),
 ]
 
 
@@ -224,3 +239,5 @@ async def test_concepts(func, responses, monkeypatch):
 
     monkeypatch.setattr("builtins.input", lambda _: responses.pop(0))
     await retry(lambda: func(), reset=reset)
+    monkeypatch.setattr("builtins.input", lambda _: responses.pop(0))
+    await retry(lambda: func())

@@ -20,9 +20,19 @@ The sample can be configured by using the command line with .NET [Secret Manager
 
 ### Using .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets)
 
-```powershell
+<<<<<<< main
+```powershell {"id":"01J6KPYX4BC26XACCKK1Q6NTKV"}
 # OpenAI (Not required if using Azure OpenAI)
+=======
+```powershell
+>>>>>>> upstream/main
 dotnet user-secrets set "OpenAI:ApiKey" "... your api key ... "
+dotnet user-secrets set "OpenAI:ModelId" ".. Openai model .. " (default: gpt-4o)
+dotnet user-secrets set "Ollama:ModelId" ".. Ollama model id .. "
+dotnet user-secrets set "Ollama:Endpoint" ".. Ollama endpoint .. " (default: http://localhost:11434)
+dotnet user-secrets set "LMStudio:Endpoint" ".. LM Studio endpoint .. " (default: http://localhost:1234)
+dotnet user-secrets set "Onnx:ModelId" ".. Onnx model id"
+dotnet user-secrets set "Onnx:ModelPath" ".. your Onnx model folder path .."
 ```
 
 ## Running the sample
@@ -31,7 +41,7 @@ After configuring the sample, to build and run the console application just hit 
 
 To build and run the console application from the terminal use the following commands:
 
-```powershell
+```powershell {"id":"01J6KPYX4BC26XACCKK2QMWVNY"}
 dotnet build
 dotnet run
 ```

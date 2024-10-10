@@ -18,6 +18,15 @@ class SemanticTextMemoryBase(KernelBaseModel):
 
     @abstractmethod
     async def save_information(
+from abc import ABC, abstractmethod
+from typing import List, Optional
+
+from semantic_kernel.memory.memory_query_result import MemoryQueryResult
+
+
+class SemanticTextMemoryBase(ABC):
+    @abstractmethod
+    async def save_information_async(
         self,
         collection: str,
         text: str,
@@ -40,6 +49,13 @@ class SemanticTextMemoryBase(KernelBaseModel):
 
     @abstractmethod
     async def save_reference(
+        description: Optional[str] = None,
+        # TODO: ctoken?
+    ) -> None:
+        pass
+
+    @abstractmethod
+    async def save_reference_async(
         self,
         collection: str,
         text: str,
@@ -65,7 +81,59 @@ class SemanticTextMemoryBase(KernelBaseModel):
         self,
         collection: str,
         key: str,
+<<<<<<< Updated upstream
+<<<<<<< head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     ) -> "MemoryQueryResult | None":
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+    ) -> "MemoryQueryResult | None":
+=======
+=======
+>>>>>>> origin/main
+=======
+<<<<<<< main
+    ) -> "MemoryQueryResult | None":
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+    ) -> "MemoryQueryResult | None":
+=======
+        # TODO: with_embedding: bool,
+    ) -> Optional[MemoryQueryResult]:
+>>>>>>> ms/small_fixes
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/main
         """Get information from the memory (calls the memory store's get method).
 
         Args:
@@ -78,6 +146,21 @@ class SemanticTextMemoryBase(KernelBaseModel):
 
     @abstractmethod
     async def search(
+        description: Optional[str] = None,
+        # TODO: ctoken?
+    ) -> None:
+        pass
+
+    @abstractmethod
+    async def get_async(
+        self,
+        collection: str,
+        query: str,  # TODO: ctoken?
+    ) -> Optional[MemoryQueryResult]:
+        pass
+
+    @abstractmethod
+    async def search_async(
         self,
         collection: str,
         query: str,
@@ -104,3 +187,10 @@ class SemanticTextMemoryBase(KernelBaseModel):
         Returns:
             List[str]: The list of all the memory collection names.
         """
+        # TODO: ctoken?
+    ) -> List[MemoryQueryResult]:
+        pass
+
+    @abstractmethod
+    async def get_collections_async(self) -> List[str]:
+        pass

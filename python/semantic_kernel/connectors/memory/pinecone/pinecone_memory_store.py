@@ -4,6 +4,7 @@ import logging
 from typing import NamedTuple
 
 from numpy import ndarray
+<<<<<<< main
 from pinecone import (
     FetchResponse,
     IndexDescription,
@@ -11,6 +12,9 @@ from pinecone import (
     Pinecone,
     ServerlessSpec,
 )
+=======
+from pinecone import FetchResponse, IndexList, IndexModel, Pinecone, ServerlessSpec
+>>>>>>> upstream/main
 from pydantic import ValidationError
 
 from semantic_kernel.connectors.memory.pinecone.pinecone_settings import (
@@ -130,9 +134,13 @@ class PineconeMemoryStore(MemoryStoreBase):
             )
             self.collection_names_cache.add(collection_name)
 
+<<<<<<< main
     async def describe_collection(
         self, collection_name: str
     ) -> IndexDescription | None:
+=======
+    async def describe_collection(self, collection_name: str) -> IndexModel | None:
+>>>>>>> upstream/main
         """Gets the description of the index.
 
         Args:

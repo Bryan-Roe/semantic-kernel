@@ -12,9 +12,16 @@ from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
 from semantic_kernel.data.vector_store_record_fields import (
+<<<<<<< Updated upstream
+from semantic_kernel.data import (
+=======
+from semantic_kernel.data import (
+>>>>>>> Stashed changes
     VectorStoreRecordDataField,
+    VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
+    vectorstoremodel,
 )
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 

@@ -3,7 +3,12 @@
 import logging
 from collections.abc import Callable
 from enum import Enum
+<<<<<<< main
 from typing import TYPE_CHECKING, Literal, TypeVar
+=======
+from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
+>>>>>>> origin/PR
 
 from typing_extensions import deprecated
 
@@ -43,6 +48,41 @@ class FunctionChoiceType(Enum):
 
 
 @experimental_class
+<<<<<<< main
+=======
+@dataclass
+class FunctionCallChoiceConfiguration:
+    """Configuration for function call choice."""
+
+    available_functions: list["KernelFunctionMetadata"] | None = None
+
+
+def _combine_filter_dicts(*dicts: dict[str, list[str]]) -> dict:
+    """Combine multiple filter dictionaries with list values into one dictionary.
+
+    This method is ensuring unique values while preserving order.
+    """
+    combined_filters = {}
+
+    keys = set().union(*(d.keys() for d in dicts))
+
+    for key in keys:
+        combined_functions: OrderedDict[str, None] = OrderedDict()
+        combined_functions = OrderedDict()
+        for d in dicts:
+            if key in d:
+                if isinstance(d[key], list):
+                    for item in d[key]:
+                        combined_functions[item] = None
+                else:
+                    raise ServiceInitializationError(f"Values for filter key '{key}' are not lists.")
+        combined_filters[key] = list(combined_functions.keys())
+
+    return combined_filters
+
+
+@experimental_class
+>>>>>>> origin/PR
 class FunctionChoiceBehavior(KernelBaseModel):
     """Class that controls function choice behavior.
 
@@ -111,9 +151,16 @@ class FunctionChoiceBehavior(KernelBaseModel):
         if isinstance(behavior, (RequiredFunction)):
             return cls.Required(
                 auto_invoke=behavior.auto_invoke_kernel_functions,
+<<<<<<< main
                 filters={
                     "included_functions": [behavior.function_fully_qualified_name]
                 },
+=======
+                filters={"included_functions": [behavior.function_fully_qualified_name]},
+                function_fully_qualified_names=[behavior.function_fully_qualified_name]
+                if hasattr(behavior, "function_fully_qualified_name")
+                else None,
+>>>>>>> origin/PR
             )
         return cls(
             enable_kernel_functions=behavior.enable_kernel_functions,
@@ -135,6 +182,7 @@ class FunctionChoiceBehavior(KernelBaseModel):
     def _check_and_get_config(
         self,
         kernel: "Kernel",
+<<<<<<< main
         filters: (
             dict[
                 Literal[
@@ -148,6 +196,14 @@ class FunctionChoiceBehavior(KernelBaseModel):
             | None
         ) = {},
     ) -> "FunctionCallChoiceConfiguration":
+=======
+        filters: dict[
+            Literal["excluded_plugins", "included_plugins", "excluded_functions", "included_functions"], list[str]
+        ]
+        | None = {},
+        self, kernel: "Kernel", filters: dict[str, Any] | None = {}
+    ) -> FunctionCallChoiceConfiguration:
+>>>>>>> origin/PR
         """Check for missing functions and get the function call choice configuration."""
         from semantic_kernel.connectors.ai.function_call_choice_configuration import (
             FunctionCallChoiceConfiguration,
@@ -301,6 +357,7 @@ class FunctionChoiceBehavior(KernelBaseModel):
                 filters = {"included_functions": valid_fqns}
 
         return type_map[behavior_type](  # type: ignore
+        return type_map[behavior_type](
             auto_invoke=auto_invoke,
             filters=filters,
             **data,

@@ -10,7 +10,7 @@ from typing import Any, TypeVar
 if sys.version < "3.11":
     from typing_extensions import Self  # pragma: no cover
 else:
-    from typing import Self  # pragma: no cover
+    from typing import Self  # type: ignore # pragma: no cover
 
 from pydantic import Field, ValidationError, field_validator, model_validator
 from pydantic_core import Url, PydanticCustomError
@@ -44,7 +44,7 @@ class DataUri(KernelBaseModel, validate_assignment=True):
     parameters: dict[str, str] = Field(default_factory=dict)
     data_format: str | None = None
 
-    def update_data(self, value: str | bytes):
+    def update_data(self, value: str | bytes) -> None:
         """Update the data, using either a string or bytes."""
         if isinstance(value, str):
             self.data_str = value
@@ -80,9 +80,13 @@ class DataUri(KernelBaseModel, validate_assignment=True):
         return self
 
     @field_validator("parameters", mode="before")
+<<<<<<< main
     def _validate_parameters(
         cls, value: list[str] | dict[str, str] | None = None
     ) -> dict[str, str]:
+=======
+    def _parse_parameters(cls, value: list[str] | dict[str, str] | None = None) -> dict[str, str]:
+>>>>>>> origin/PR
         if not value:
             return {}
         if isinstance(value, dict):

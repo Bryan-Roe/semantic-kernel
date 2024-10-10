@@ -2,6 +2,7 @@
 
 import sys
 from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from azure.ai.inference.aio import EmbeddingsClient
 from azure.ai.inference.models import EmbeddingsResult
@@ -13,6 +14,8 @@ if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
     from typing_extensions import override  # pragma: no cover
+
+from azure.identity import DefaultAzureCredential
 
 from semantic_kernel.connectors.ai.azure_ai_inference.azure_ai_inference_prompt_execution_settings import (
     AzureAIInferenceEmbeddingPromptExecutionSettings,
@@ -26,6 +29,10 @@ from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inferenc
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
     EmbeddingGeneratorBase,
 )
+from semantic_kernel.connectors.ai.azure_ai_inference.azure_ai_inference_settings import AzureAIInferenceSettings
+from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inference_base import AzureAIInferenceBase
+from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import EmbeddingGeneratorBase
+from semantic_kernel.connectors.ai.open_ai.const import DEFAULT_AZURE_API_VERSION
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.user_agent import SEMANTIC_KERNEL_USER_AGENT
@@ -88,7 +95,25 @@ class AzureAIInferenceTextEmbedding(EmbeddingGeneratorBase, AzureAIInferenceBase
                     azure_ai_inference_settings.api_key.get_secret_value()
                 ),
                 user_agent=SEMANTIC_KERNEL_USER_AGENT,
+                endpoint=azure_ai_inference_settings.endpoint,
+                credential=AzureKeyCredential(azure_ai_inference_settings.api_key.get_secret_value()),
             )
+            endpoint = str(azure_ai_inference_settings.endpoint)
+            if azure_ai_inference_settings.api_key is not None:
+                client = EmbeddingsClient(
+                    endpoint=endpoint,
+                    credential=AzureKeyCredential(azure_ai_inference_settings.api_key.get_secret_value()),
+                    user_agent=SEMANTIC_KERNEL_USER_AGENT,
+                )
+            else:
+                # Try to create the client with a DefaultAzureCredential
+                client = EmbeddingsClient(
+                    endpoint=endpoint,
+                    credential=DefaultAzureCredential(),
+                    credential_scopes=["https://cognitiveservices.azure.com/.default"],
+                    api_version=DEFAULT_AZURE_API_VERSION,
+                    user_agent=SEMANTIC_KERNEL_USER_AGENT,
+                )
 
         super().__init__(
             ai_model_id=ai_model_id,
@@ -112,6 +137,9 @@ class AzureAIInferenceTextEmbedding(EmbeddingGeneratorBase, AzureAIInferenceBase
         )  # nosec
         assert isinstance(self.client, EmbeddingsClient)  # nosec
 
+    async def generate_embeddings(self, texts: list[str], **kwargs: Any) -> ndarray:
+        """Generate embeddings from the Azure AI Inference service."""
+        settings: AzureAIInferenceEmbeddingPromptExecutionSettings = kwargs.get("settings", None)
         response: EmbeddingsResult = await self.client.embed(
             input=texts,
             model_extras=settings.extra_parameters if settings else None,
@@ -128,3 +156,7 @@ class AzureAIInferenceTextEmbedding(EmbeddingGeneratorBase, AzureAIInferenceBase
     ) -> type["PromptExecutionSettings"]:
         """Get the request settings class."""
         return AzureAIInferenceEmbeddingPromptExecutionSettings
+            kwargs=kwargs,
+        )
+
+        return array([array(item.embedding) for item in response.data])

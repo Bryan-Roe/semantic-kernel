@@ -16,6 +16,7 @@ from semantic_kernel.connectors.ai.function_choice_behavior import (
     _combine_filter_dicts,
 )
 from semantic_kernel.exceptions import ServiceInitializationError
+)
 
 
 @pytest.fixture
@@ -96,6 +97,8 @@ def test_from_function_call_behavior():
 def test_auto_function_choice_behavior_from_dict(
     type: str, max_auto_invoke_attempts: int
 ):
+@pytest.mark.parametrize(("type", "max_auto_invoke_attempts"), [("auto", 5), ("none", 0), ("required", 1)])
+def test_auto_function_choice_behavior_from_dict(type: str, max_auto_invoke_attempts: int):
     data = {
         "type": type,
         "filters": {"included_functions": ["plugin1-func1", "plugin2-func2"]},
@@ -106,6 +109,8 @@ def test_auto_function_choice_behavior_from_dict(
     assert behavior.filters == {
         "included_functions": ["plugin1-func1", "plugin2-func2"]
     }
+    assert behavior.type == FunctionChoiceType(type)
+    if behavior.filters != {"included_functions": ["plugin1-func1", "plugin2-func2"]}: raise ValueError("Filters do not match the expected value")
     assert behavior.maximum_auto_invoke_attempts == max_auto_invoke_attempts
 
 
@@ -167,10 +172,10 @@ def test_function_choice_behavior_get_set(
 
 def test_auto_invoke_kernel_functions():
     fcb = FunctionChoiceBehavior.Auto(auto_invoke=True)
-    assert fcb is not None
+    if fcb is None: raise ValueError("fcb should not be None")
     assert fcb.enable_kernel_functions is True
     assert fcb.maximum_auto_invoke_attempts == 5
-    assert fcb.auto_invoke_kernel_functions is True
+    if fcb.auto_invoke_kernel_functions is not True: raise AssertionError
 
 
 def test_none_invoke_kernel_functions():
@@ -189,7 +194,7 @@ def test_enable_functions():
     assert fcb.enable_kernel_functions is True
     assert fcb.maximum_auto_invoke_attempts == 5
     assert fcb.auto_invoke_kernel_functions is True
-    assert fcb.filters == {"excluded_plugins": ["test"]}
+    if fcb.filters != {"excluded_plugins": ["test"]}: raise AssertionError
 
 
 def test_required_function():

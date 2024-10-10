@@ -1,4 +1,46 @@
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ﻿// Copyright (c) Microsoft. All rights reserved.
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+﻿// Copyright (c) Microsoft. All rights reserved.
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel.Connectors.Qdrant;
@@ -6,6 +48,54 @@ using Microsoft.SemanticKernel.Data;
 using Qdrant.Client;
 
 namespace Microsoft.SemanticKernel;
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+=======
+>>>>>>> Stashed changes
+using Microsoft.SemanticKernel.Data;
+using Qdrant.Client;
+
+namespace Microsoft.SemanticKernel.Connectors.Qdrant;
+<<<<<<< Updated upstream
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
 
 /// <summary>
 /// Extension methods to register Qdrant <see cref="IVectorStore"/> instances on an <see cref="IServiceCollection"/>.
@@ -64,4 +154,143 @@ public static class QdrantServiceCollectionExtensions
 
         return services;
     }
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+=======
+>>>>>>> Stashed changes
+
+    /// <summary>
+    /// Register a Qdrant <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> and <see cref="IVectorizedSearch{TRecord}"/> with the specified service ID
+    /// and where the Qdrant <see cref="QdrantClient"/> is retrieved from the dependency injection container.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    /// <typeparam name="TRecord">The type of the record.</typeparam>
+    /// <param name="services">The <see cref="IServiceCollection"/> to register the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> on.</param>
+    /// <param name="collectionName">The name of the collection.</param>
+    /// <param name="options">Optional options to further configure the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/>.</param>
+    /// <param name="serviceId">An optional service id to use as the service key.</param>
+    /// <returns>Service collection.</returns>
+    public static IServiceCollection AddQdrantVectorStoreRecordCollection<TKey, TRecord>(
+        this IServiceCollection services,
+        string collectionName,
+        QdrantVectorStoreRecordCollectionOptions<TRecord>? options = default,
+        string? serviceId = default)
+        where TKey : notnull
+        where TRecord : class
+    {
+        services.AddKeyedTransient<IVectorStoreRecordCollection<TKey, TRecord>>(
+            serviceId,
+            (sp, obj) =>
+            {
+                var qdrantClient = sp.GetRequiredService<QdrantClient>();
+                var selectedOptions = options ?? sp.GetService<QdrantVectorStoreRecordCollectionOptions<TRecord>>();
+
+                return (new QdrantVectorStoreRecordCollection<TRecord>(qdrantClient, collectionName, selectedOptions) as IVectorStoreRecordCollection<TKey, TRecord>)!;
+            });
+
+        AddVectorizedSearch<TKey, TRecord>(services, serviceId);
+
+        return services;
+    }
+
+    /// <summary>
+    /// Register a Qdrant <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> and <see cref="IVectorizedSearch{TRecord}"/> with the specified service ID
+    /// and where the Qdrant <see cref="QdrantClient"/> is constructed using the provided parameters.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    /// <typeparam name="TRecord">The type of the record.</typeparam>
+    /// <param name="services">The <see cref="IServiceCollection"/> to register the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> on.</param>
+    /// <param name="collectionName">The name of the collection.</param>
+    /// <param name="host">The Qdrant service host name.</param>
+    /// <param name="port">The Qdrant service port.</param>
+    /// <param name="https">A value indicating whether to use HTTPS for communicating with Qdrant.</param>
+    /// <param name="apiKey">The Qdrant service API key.</param>
+    /// <param name="options">Optional options to further configure the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/>.</param>
+    /// <param name="serviceId">An optional service id to use as the service key.</param>
+    /// <returns>Service collection.</returns>
+    public static IServiceCollection AddQdrantVectorStoreRecordCollection<TKey, TRecord>(
+        this IServiceCollection services,
+        string collectionName,
+        string host,
+        int port = 6334,
+        bool https = false,
+        string? apiKey = default,
+        QdrantVectorStoreRecordCollectionOptions<TRecord>? options = default,
+        string? serviceId = default)
+        where TKey : notnull
+        where TRecord : class
+    {
+        services.AddKeyedSingleton<IVectorStoreRecordCollection<TKey, TRecord>>(
+            serviceId,
+            (sp, obj) =>
+            {
+                var qdrantClient = new QdrantClient(host, port, https, apiKey);
+                var selectedOptions = options ?? sp.GetService<QdrantVectorStoreRecordCollectionOptions<TRecord>>();
+
+                return (new QdrantVectorStoreRecordCollection<TRecord>(qdrantClient, collectionName, selectedOptions) as IVectorStoreRecordCollection<TKey, TRecord>)!;
+            });
+
+        AddVectorizedSearch<TKey, TRecord>(services, serviceId);
+
+        return services;
+    }
+
+    /// <summary>
+    /// Also register the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> with the given <paramref name="serviceId"/> as a <see cref="IVectorizedSearch{TRecord}"/>.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    /// <typeparam name="TRecord">The type of the data model that the collection should contain.</typeparam>
+    /// <param name="services">The service collection to register on.</param>
+    /// <param name="serviceId">The service id that the registrations should use.</param>
+    private static void AddVectorizedSearch<TKey, TRecord>(IServiceCollection services, string? serviceId)
+        where TKey : notnull
+        where TRecord : class
+    {
+        services.AddKeyedTransient<IVectorizedSearch<TRecord>>(
+            serviceId,
+            (sp, obj) =>
+            {
+                return sp.GetRequiredKeyedService<IVectorStoreRecordCollection<TKey, TRecord>>(serviceId);
+            });
+    }
+<<<<<<< Updated upstream
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
 }

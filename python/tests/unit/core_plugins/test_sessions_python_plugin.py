@@ -242,6 +242,22 @@ async def test_upload_file_with_local_path(
                             "lastModifiedTime": "2024-07-02T19:29:23.4369699Z",
                         },
                     },
+                "$values": [
+                    {
+                        "$id": "2",
+                "$values": [
+                    {
+                        "$id": "2",
+                "$values": [
+                    {
+                        "$id": "2",
+                "$values": [
+                    {
+                        "$id": "2",
+                        "filename": "test.txt",
+                        "size": 123,
+                        "last_modified_time": "2024-06-03T17:48:46.2672398Z",
+                    }
                 ],
             },
             request=mock_request,
@@ -297,6 +313,16 @@ async def test_upload_file_with_local_path_and_no_remote(
                             "lastModifiedTime": "2024-07-02T19:29:23.4369699Z",
                         },
                     },
+                "$values": [
+                    {
+                        "$id": "2",
+                "$values": [
+                    {
+                        "$id": "2",
+                        "filename": "test.txt",
+                        "size": 123,
+                        "last_modified_time": "2024-06-03T17:00:00.0000000Z",
+                    }
                 ],
             },
             request=mock_request,
@@ -383,6 +409,8 @@ async def test_upload_file_with_buffer(
         mock_request = httpx.Request(
             method="POST", url="https://example.com/files/upload?identifier=None"
         )
+        mock_request = httpx.Request(method="POST", url="https://example.com/files/upload?identifier=None")
+        mock_request = httpx.Request(method="POST", url="https://example.com/python/uploadFile?identifier=None")
 
         mock_response = httpx.Response(
             status_code=200,
@@ -398,6 +426,22 @@ async def test_upload_file_with_buffer(
                             "lastModifiedTime": "2024-07-02T19:29:23.4369699Z",
                         },
                     },
+                "$values": [
+                    {
+                        "$id": "2",
+                "$values": [
+                    {
+                        "$id": "2",
+                "$values": [
+                    {
+                        "$id": "2",
+                "$values": [
+                    {
+                        "$id": "2",
+                        "filename": expected_remote_file_path,
+                        "size": 456,
+                        "last_modified_time": "2024-06-03T17:00:00.0000000Z",
+                    }
                 ],
             },
             request=mock_request,
@@ -465,6 +509,19 @@ async def test_list_files(mock_get, aca_python_sessions_unit_test_env):
                             "lastModifiedTime": "2024-07-02T19:29:38.1329088Z",
                         },
                     },
+                "$values": [
+                    {
+                        "$id": "2",
+                        "filename": "test1.txt",
+                        "size": 123,
+                        "last_modified_time": "2024-06-03T17:00:00.0000000Z",
+                    },  # noqa: E501
+                    {
+                        "$id": "3",
+                        "filename": "test2.txt",
+                        "size": 456,
+                        "last_modified_time": "2024-06-03T18:00:00.0000000Z",
+                    },  # noqa: E501
                 ],
             },
             request=mock_request,
@@ -677,6 +734,7 @@ async def test_auth_token_fail(aca_python_sessions_unit_test_env):
     with pytest.raises(
         FunctionExecutionException,
         match="Failed to retrieve the client auth token with messages: Could not get token.",
+        FunctionExecutionException, match="Failed to retrieve the client auth token with message: Could not get token."
     ):
         await plugin._ensure_auth_token()
 
