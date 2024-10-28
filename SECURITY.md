@@ -57,14 +57,7 @@ Microsoft follows the principle of [Coordinated Vulnerability Disclosure](https:
 
 ## Verifying Third-Party Actions
 
-All third-party actions used in workflows must pass our verification process before deployment. This includes:
-- Validating the action's source code and dependencies
-- Ensuring actions are pinned to specific SHA commits
-- Reviewing the action's security permissions and access scope
-- Confirming GitHub certification status
-- Scanning for known vulnerabilities and malicious code
-
-Actions from GitHub Marketplace with "verified creator" badges are preferred. Custom or community actions require additional security review.
+All third-party actions used in workflows are verified and certified by GitHub. This ensures that the actions meet the necessary security standards and are safe to use in the repository.
 
 ## Monitoring for New Vulnerabilities
 
