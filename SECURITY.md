@@ -59,6 +59,10 @@ Microsoft follows the principle of [Coordinated Vulnerability Disclosure](https:
 
 All third-party actions used in workflows are verified and certified by GitHub. This ensures that the actions meet the necessary security standards and are safe to use in the repository.
 
+## Replacing Deprecated or Outdated Security Tools
+
+Any deprecated or outdated security tools are replaced with their latest versions. This ensures that the repository is always using the most up-to-date and secure tools available.
+
 ## Monitoring for New Vulnerabilities
 
 A new workflow has been added to monitor and alert for any new security vulnerabilities in dependencies. This workflow runs daily and uses a certified GitHub action for dependency vulnerability scanning.
