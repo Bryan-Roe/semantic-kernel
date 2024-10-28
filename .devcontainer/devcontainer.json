@@ -86,6 +86,11 @@
 }
 }
 }
+},
+"tasks": {
+  "test": "1. For Python:\n```\npython -m unittest discover\n```\n2. For Java (using Maven):\n```\nmvn test\n```\n3. For .NET:\n```\ndotnet test\n```\n4. For Node.js:\n```\nnpm test\n```\n5. For Ruby (using RSpec):\n```\nbundle exec rspec\n```\n6. For PHP (using PHPUnit):\n```\nvendor/bin/phpunit\n```\n7. For Rust:\n```\ncargo test\n```\n8. For Scala (using sbt):\n```\nsbt test\n```\n9. For Go:\n```\ngo test ./...\n```\n10. For C++ (using Makefile):\n```\nmake test\n```",
+  "build": "npm install && npm run build",
+  "launch": "pip install -r requirements.txt && python app.py"
 }
 }
 
