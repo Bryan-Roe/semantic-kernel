@@ -581,3 +581,29 @@ The repository is set up with automated security testing workflows to ensure con
 The repository follows documented security policies and best practices to ensure the security of the project. These include guidelines for secure coding, regular security reviews, and mandatory security training for developers. The process for monitoring and responding to security alerts is also documented.
 
 For more information, see the `SECURITY.md` file in the repository.
+
+## Ensuring Successful Completion of All GitHub Actions
+
+To ensure that all GitHub Actions complete successfully, we have implemented a new workflow and script. This section provides information about the new workflow and how to use it.
+
+### New Workflow: ensure-success.yml
+
+We have added a new workflow file `.github/workflows/ensure-success.yml` to ensure all GitHub Actions complete successfully. This workflow runs on `push`, `pull_request`, and `schedule` events. It checks the status of all other workflows and retries failed ones up to 3 times.
+
+### Updated Existing Workflows
+
+We have updated existing workflows to include a step that triggers the new `ensure-success.yml` workflow upon completion. This ensures that the new workflow is executed after each workflow run.
+
+### New Script: check-workflow-status.sh
+
+We have added a new script `scripts/check-workflow-status.sh` to check the status of all workflows and trigger retries if needed. This script is used by the new workflow to ensure successful completion of all GitHub Actions.
+
+### Instructions
+
+To use the new workflow and script, follow these steps:
+
+1. Ensure that the new workflow file `.github/workflows/ensure-success.yml` is present in your repository.
+2. Ensure that the new script `scripts/check-workflow-status.sh` is present in your repository.
+3. Update your existing workflows to include a step that triggers the new `ensure-success.yml` workflow upon completion.
+
+By following these steps, you can ensure that all GitHub Actions complete successfully and that any failed workflows are retried automatically.
