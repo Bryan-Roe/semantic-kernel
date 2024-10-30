@@ -117,6 +117,17 @@ public sealed class ProcessBuilder : ProcessStepBuilder
         return this.Build(null);
     }
 
+    /// <summary>
+    /// Add the provided step builder to the process.
+    /// </summary>
+    /// <remarks>
+    /// Utilized by <see cref="ProcessMapBuilder"/> only.
+    /// </remarks>
+    internal void AddStepFromBuilder(ProcessStepBuilder stepBuilder)
+    {
+        this._steps.Add(stepBuilder);
+    }
+
     #region Public Interface
 
     /// <summary>
@@ -164,6 +175,21 @@ public sealed class ProcessBuilder : ProcessStepBuilder
         kernelProcess.HasParentProcess = true;
         this._steps.Add(kernelProcess);
         return kernelProcess;
+    }
+
+    /// <summary>
+    /// Adds a map operation to the process that accepts an enumerable input parameter and
+    /// processes each individual parameter value by the specified map operation (TStep).
+    /// Results are coalesced into a result set of the same dimension as the input set.
+    /// </summary>
+    /// <param name="target">The target for the map operation</param>
+    /// <returns>An instance of <see cref="ProcessMapBuilder"/></returns>
+    public ProcessMapBuilder AddMapForTarget(ProcessFunctionTargetBuilder target)
+    {
+        var mapBuilder = new ProcessMapBuilder(target);
+        this._steps.Add(mapBuilder);
+
+        return mapBuilder;
     }
 
     /// <summary>

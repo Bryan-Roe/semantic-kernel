@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -275,6 +275,65 @@ internal sealed class ProcessActor : StepActor, IProcess, IDisposable
         // The process does not need any further initialization as it's already been initialized.
         // Override the base method to prevent it from being called.
         return default;
+    }
+
+    private async Task InitializeProcessActorAsync(DaprProcessInfo processInfo, string? parentProcessId)
+    {
+        Verify.NotNull(processInfo);
+        Verify.NotNull(processInfo.Steps);
+
+        this.ParentProcessId = parentProcessId;
+        this._process = processInfo;
+        this._stepsInfos = new List<DaprStepInfo>(this._process.Steps);
+        this._logger = this.LoggerFactory?.CreateLogger(this._process.State.Name) ?? new NullLogger<ProcessActor>();
+
+        // Initialize the input and output edges for the process
+        this._outputEdges = this._process.Edges.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToList());
+
+        // Initialize the steps within this process
+        foreach (var step in this._stepsInfos)
+        {
+            IStep? stepActor = null;
+
+            // The current step should already have a name.
+            Verify.NotNull(step.State?.Name);
+
+            if (step is DaprProcessInfo processStep)
+            {
+                // The process will only have an Id if its already been executed.
+                if (string.IsNullOrWhiteSpace(processStep.State.Id))
+                {
+                    processStep = processStep with { State = processStep.State with { Id = Guid.NewGuid().ToString() } };
+                }
+
+                // Initialize the step as a process.
+                var scopedProcessId = this.ScopedActorId(new ActorId(processStep.State.Id!));
+                var processActor = this.ProxyFactory.CreateActorProxy<IProcess>(scopedProcessId, nameof(ProcessActor));
+                await processActor.InitializeProcessAsync(processStep, this.Id.GetId()).ConfigureAwait(false);
+                stepActor = this.ProxyFactory.CreateActorProxy<IStep>(scopedProcessId, nameof(ProcessActor));
+            }
+            else if (step is DaprMapInfo mapStep)
+            {
+                // Initialize the step as a map.
+                ActorId scopedMapId = this.ScopedActorId(new ActorId(mapStep.State.Id!));
+                IMap mapActor = this.ProxyFactory.CreateActorProxy<IMap>(scopedMapId, nameof(MapActor));
+                await mapActor.InitializeMapAsync(mapStep, this.Id.GetId()).ConfigureAwait(false);
+                stepActor = this.ProxyFactory.CreateActorProxy<IStep>(scopedMapId, nameof(MapActor));
+            }
+            else
+            {
+                // The current step should already have an Id.
+                Verify.NotNull(step.State?.Id);
+
+                var scopedStepId = this.ScopedActorId(new ActorId(step.State.Id!));
+                stepActor = this.ProxyFactory.CreateActorProxy<IStep>(scopedStepId, nameof(StepActor));
+                await stepActor.InitializeStepAsync(step, this.Id.GetId()).ConfigureAwait(false);
+            }
+
+            this._steps.Add(stepActor);
+        }
+
+        this._isInitialized = true;
     }
 
     private async Task Internal_ExecuteAsync(Kernel? kernel = null, int maxSupersteps = 100, bool keepAlive = true, CancellationToken cancellationToken = default)
