@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -7,28 +7,28 @@ using System.Threading;
 using Microsoft.Extensions.VectorData;
 using MongoDB.Driver;
 
-namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
+namespace Microsoft.SemanticKernel.Connectors.MongoDB;
 
 /// <summary>
-/// Class for accessing the list of collections in a Azure CosmosDB MongoDB vector store.
+/// Class for accessing the list of collections in a MongoDB vector store.
 /// </summary>
 /// <remarks>
 /// This class can be used with collections of any schema type, but requires you to provide schema information when getting a collection.
 /// </remarks>
-public sealed class AzureCosmosDBMongoDBVectorStore : IVectorStore
+public sealed class MongoDBVectorStore : IVectorStore
 {
-    /// <summary><see cref="IMongoDatabase"/> that can be used to manage the collections in Azure CosmosDB MongoDB.</summary>
+    /// <summary><see cref="IMongoDatabase"/> that can be used to manage the collections in MongoDB.</summary>
     private readonly IMongoDatabase _mongoDatabase;
 
     /// <summary>Optional configuration options for this class.</summary>
-    private readonly AzureCosmosDBMongoDBVectorStoreOptions _options;
+    private readonly MongoDBVectorStoreOptions _options;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AzureCosmosDBMongoDBVectorStore"/> class.
+    /// Initializes a new instance of the <see cref="MongoDBVectorStore"/> class.
     /// </summary>
-    /// <param name="mongoDatabase"><see cref="IMongoDatabase"/> that can be used to manage the collections in Azure CosmosDB MongoDB.</param>
+    /// <param name="mongoDatabase"><see cref="IMongoDatabase"/> that can be used to manage the collections in MongoDB.</param>
     /// <param name="options">Optional configuration options for this class.</param>
-    public AzureCosmosDBMongoDBVectorStore(IMongoDatabase mongoDatabase, AzureCosmosDBMongoDBVectorStoreOptions? options = default)
+    public MongoDBVectorStore(IMongoDatabase mongoDatabase, MongoDBVectorStoreOptions? options = default)
     {
         Verify.NotNull(mongoDatabase);
 
@@ -50,7 +50,7 @@ public sealed class AzureCosmosDBMongoDBVectorStore : IVectorStore
             throw new NotSupportedException("Only string keys are supported.");
         }
 
-        var recordCollection = new AzureCosmosDBMongoDBVectorStoreRecordCollection<TRecord>(
+        var recordCollection = new MongoDBVectorStoreRecordCollection<TRecord>(
             this._mongoDatabase,
             name,
             new() { VectorStoreRecordDefinition = vectorStoreRecordDefinition }) as IVectorStoreRecordCollection<TKey, TRecord>;

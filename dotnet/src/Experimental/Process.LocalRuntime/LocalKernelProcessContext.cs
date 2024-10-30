@@ -39,6 +39,16 @@ public sealed class LocalKernelProcessContext : IDisposable
         this._kernel = kernel;
         this._localProcess = new LocalProcess(process, kernel);
     }
+        Verify.NotNull(process, nameof(process));
+        Verify.NotNull(kernel, nameof(kernel));
+        Verify.NotNullOrWhiteSpace(process.State?.Name);
+
+        this._kernel = kernel;
+        this._localProcess = new LocalProcess(process, kernel);
+    }
+
+    internal Task StartWithEventAsync(KernelProcessEvent? initialEvent, Kernel? kernel = null) =>
+        this._localProcess.RunOnceAsync(initialEvent, kernel);
 
     internal Task StartWithEventAsync(KernelProcessEvent? initialEvent, Kernel? kernel = null) =>
         this._localProcess.RunOnceAsync(initialEvent, kernel);
