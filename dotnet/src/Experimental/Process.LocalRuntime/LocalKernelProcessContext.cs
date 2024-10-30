@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System;
 using System.Threading.Tasks;
 
@@ -32,6 +32,16 @@ public sealed class LocalKernelProcessContext : IDisposable
     {
         return this._localProcess.RunOnceAsync(initialEvent);
     }
+        Verify.NotNull(process, nameof(process));
+        Verify.NotNull(kernel, nameof(kernel));
+        Verify.NotNullOrWhiteSpace(process.State?.Name);
+
+        this._kernel = kernel;
+        this._localProcess = new LocalProcess(process, kernel);
+    }
+
+    internal Task StartWithEventAsync(KernelProcessEvent? initialEvent, Kernel? kernel = null) =>
+        this._localProcess.RunOnceAsync(initialEvent, kernel);
 
     /// <summary>
     /// Sends a message to the process.
@@ -56,5 +66,5 @@ public sealed class LocalKernelProcessContext : IDisposable
     /// <summary>
     /// Disposes of the resources used by the process.
     /// </summary>
-    public void Dispose() => this._localProcess?.Dispose();
+    public void Dispose() => this._localProcess.Dispose();
 }

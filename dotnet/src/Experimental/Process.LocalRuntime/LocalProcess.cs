@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -42,6 +42,9 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// <param name="kernel">An instance of <see cref="Kernel"/></param>
     internal LocalProcess(KernelProcess process, Kernel kernel)
         : base(process, kernel)
+    /// <param name="parentProcessId">Optional. The Id of the parent process if one exists, otherwise null.</param>
+    internal LocalProcess(KernelProcess process, Kernel kernel, string? parentProcessId = null)
+        : base(process, kernel, parentProcessId)
     {
         Verify.NotNull(process);
         Verify.NotNull(process.Steps);
@@ -54,6 +57,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
         this._externalEventChannel = Channel.CreateUnbounded<KernelProcessEvent>();
         this._joinableTaskContext = new JoinableTaskContext();
         this._joinableTaskFactory = new JoinableTaskFactory(this._joinableTaskContext);
+        this._logger = this._kernel.LoggerFactory?.CreateLogger(this.Name) ?? new NullLogger<LocalStep>();
     }
 
     /// <summary>
@@ -83,6 +87,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     {
         Verify.NotNull(processEvent);
         await Task.Yield(); // Ensure that the process has an opportunity to run in a different synchronization context.
+        Verify.NotNull(processEvent, nameof(processEvent));
         await this._externalEventChannel.Writer.WriteAsync(processEvent).ConfigureAwait(false);
         await this.StartAsync(kernel, keepAlive: false).ConfigureAwait(false);
         await this._processTask!.JoinAsync().ConfigureAwait(false);
@@ -126,6 +131,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     internal Task SendMessageAsync(KernelProcessEvent processEvent, Kernel? kernel = null)
     {
         Verify.NotNull(processEvent);
+        Verify.NotNull(processEvent, nameof(processEvent));
         return this._externalEventChannel.Writer.WriteAsync(processEvent).AsTask();
     }
 
@@ -137,6 +143,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     {
         return this.ToKernelProcessAsync();
     }
+    internal Task<KernelProcess> GetProcessInfoAsync() => this.ToKernelProcessAsync();
 
     /// <summary>
     /// Handles a <see cref="LocalMessage"/> that has been sent to the process. This happens only in the case
@@ -153,6 +160,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
             string errorMessage = "Internal Process Error: The target event id must be specified when sending a message to a step.";
             this.Logger.LogError("{ErrorMessage}", errorMessage);
             throw new KernelException(errorMessage);
+            throw new KernelException("Internal Process Error: The target event id must be specified when sending a message to a step.").Log(this._logger);
         }
 
         string eventId = message.TargetEventId!;
@@ -210,6 +218,13 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                         ParentProcessId = this.Id,
                         LoggerFactory = this.LoggerFactory,
                     };
+                var process = new LocalProcess(
+                    process: kernelStep,
+                    kernel: this._kernel,
+                    parentProcessId: this.Id);
+
+                //await process.StartAsync(kernel: this._kernel, keepAlive: true).ConfigureAwait(false);
+                localStep = process;
             }
             else
             {
@@ -223,6 +238,10 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                         LoggerFactory = this.LoggerFactory,
                         EventFilter = this.EventFilter,
                     };
+                localStep = new LocalStep(
+                    stepInfo: step,
+                    kernel: this._kernel,
+                    parentProcessId: this.Id);
             }
 
             this._steps.Add(localStep);
@@ -300,6 +319,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
         catch (Exception ex)
         {
             this.Logger?.LogError("An error occurred while running the process: {ErrorMessage}.", ex.Message);
+            this._logger?.LogError(ex, "An error occurred while running the process.");
             throw;
         }
         finally
