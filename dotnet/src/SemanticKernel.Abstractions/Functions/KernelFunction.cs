@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+<<<<<<< main
 <<<<<<< Updated upstream
 using System.Runtime.CompilerServices;
 =======
@@ -29,11 +30,14 @@ using System.Runtime.CompilerServices;
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+>>>>>>> upstream/main
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+<<<<<<< main
 <<<<<<< Updated upstream
 =======
 <<<<<<< Updated upstream
@@ -53,6 +57,8 @@ using System.Text.Json;
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+>>>>>>> upstream/main
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -155,6 +161,7 @@ public abstract class KernelFunction
         description: "Measures the duration of a function's streaming execution");
 
     /// <summary>The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</summary>
+<<<<<<< main
     private readonly JsonSerializerOptions? _jsonSerializerOptions;
 <<<<<<< Updated upstream
 
@@ -183,6 +190,9 @@ public abstract class KernelFunction
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+    protected JsonSerializerOptions? JsonSerializerOptions { get; set; }
+>>>>>>> upstream/main
 
     /// <summary>
     /// Gets the name of the function.
@@ -338,6 +348,7 @@ public abstract class KernelFunction
     /// The <see cref="PromptExecutionSettings"/> to use with the function. These will apply unless they've been
     /// overridden by settings passed into the invocation of the function.
     /// </param>
+<<<<<<< main
 <<<<<<< Updated upstream
     internal KernelFunction(string name, string description, IReadOnlyList<KernelParameterMetadata> parameters, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null)
         : this(name, null, description, parameters, returnParameter, executionSettings)
@@ -363,6 +374,10 @@ public abstract class KernelFunction
 >>>>>>> Stashed changes
 <<<<<<< main
 >>>>>>> Stashed changes
+=======
+    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
+>>>>>>> upstream/main
     internal KernelFunction(string name, string description, IReadOnlyList<KernelParameterMetadata> parameters, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null)
         : this(name, null, description, parameters, returnParameter, executionSettings)
     internal KernelFunction(string name, string description, IReadOnlyList<KernelParameterMetadata> parameters, JsonSerializerOptions jsonSerializerOptions, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null)
@@ -411,6 +426,23 @@ public abstract class KernelFunction
     /// Initializes a new instance of the <see cref="KernelFunction"/> class.
     /// </summary>
     /// <param name="name">A name of the function to use as its <see cref="KernelFunction.Name"/>.</param>
+    /// <param name="description">The description of the function to use as its <see cref="KernelFunction.Description"/>.</param>
+    /// <param name="parameters">The metadata describing the parameters to the function.</param>
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
+    /// <param name="returnParameter">The metadata describing the return parameter of the function.</param>
+    /// <param name="executionSettings">
+    /// The <see cref="PromptExecutionSettings"/> to use with the function. These will apply unless they've been
+    /// overridden by settings passed into the invocation of the function.
+    /// </param>
+    internal KernelFunction(string name, string description, IReadOnlyList<KernelParameterMetadata> parameters, JsonSerializerOptions jsonSerializerOptions, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null)
+        : this(name, null, description, parameters, jsonSerializerOptions, returnParameter, executionSettings)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="KernelFunction"/> class.
+    /// </summary>
+    /// <param name="name">A name of the function to use as its <see cref="KernelFunction.Name"/>.</param>
     /// <param name="pluginName">The name of the plugin this function instance has been added to.</param>
     /// <param name="description">The description of the function to use as its <see cref="KernelFunction.Description"/>.</param>
     /// <param name="parameters">The metadata describing the parameters to the function.</param>
@@ -420,6 +452,7 @@ public abstract class KernelFunction
     /// overridden by settings passed into the invocation of the function.
     /// </param>
     /// <param name="additionalMetadata">Properties/metadata associated with the function itself rather than its parameters and return type.</param>
+<<<<<<< main
 <<<<<<< Updated upstream
     [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
@@ -467,6 +500,10 @@ public abstract class KernelFunction
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
+>>>>>>> upstream/main
     internal KernelFunction(string name, string? pluginName, string description, IReadOnlyList<KernelParameterMetadata> parameters, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null, ReadOnlyDictionary<string, object?>? additionalMetadata = null)
     {
         Verify.NotNull(name);
@@ -534,6 +571,7 @@ public abstract class KernelFunction
     }
 
     /// <summary>
+<<<<<<< main
 <<<<<<< Updated upstream
 =======
 <<<<<<< Updated upstream
@@ -554,6 +592,8 @@ public abstract class KernelFunction
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+>>>>>>> upstream/main
     /// Initializes a new instance of the <see cref="KernelFunction"/> class.
     /// </summary>
     /// <param name="name">A name of the function to use as its <see cref="KernelFunction.Name"/>.</param>
@@ -589,11 +629,15 @@ public abstract class KernelFunction
                 entry => { var clone = entry.Value.Clone(); clone.Freeze(); return clone; });
         }
 
+<<<<<<< main
         this._jsonSerializerOptions = jsonSerializerOptions;
+=======
+>>>>>>> upstream/main
         this.JsonSerializerOptions = jsonSerializerOptions;
     }
 
     /// <summary>
+<<<<<<< main
     }
 
     /// <summary>
@@ -619,6 +663,8 @@ public abstract class KernelFunction
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+>>>>>>> upstream/main
     /// Invokes the <see cref="KernelFunction"/>.
     /// </summary>
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
@@ -686,6 +732,7 @@ public abstract class KernelFunction
         // Ensure arguments are initialized.
         arguments ??= [];
         logger.LogFunctionInvoking(this.Name);
+<<<<<<< main
 <<<<<<< Updated upstream
         logger.LogFunctionArguments(arguments);
 =======
@@ -748,6 +795,10 @@ public abstract class KernelFunction
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+
+        this.LogFunctionArguments(logger, arguments);
+>>>>>>> upstream/main
 
         TagList tags = new() { { MeasurementFunctionTagName, this.Name } };
         long startingTimestamp = Stopwatch.GetTimestamp();
@@ -793,6 +844,7 @@ public abstract class KernelFunction
             }
 
             logger.LogFunctionInvokedSuccess(this.Name);
+<<<<<<< main
 <<<<<<< Updated upstream
             logger.LogFunctionResultValue(functionResult);
 =======
@@ -847,6 +899,10 @@ public abstract class KernelFunction
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+
+            this.LogFunctionResult(logger, functionResult);
+>>>>>>> upstream/main
 
             return functionResult;
         }
@@ -1064,6 +1120,7 @@ public abstract class KernelFunction
 
         arguments ??= [];
         logger.LogFunctionStreamingInvoking(this.Name);
+<<<<<<< main
 <<<<<<< Updated upstream
 
         arguments ??= [];
@@ -1098,6 +1155,10 @@ public abstract class KernelFunction
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
         logger.LogFunctionArguments(arguments);
+=======
+
+        this.LogFunctionArguments(logger, arguments);
+>>>>>>> upstream/main
 
         TagList tags = new() { { MeasurementFunctionTagName, this.Name } };
         long startingTimestamp = Stopwatch.GetTimestamp();

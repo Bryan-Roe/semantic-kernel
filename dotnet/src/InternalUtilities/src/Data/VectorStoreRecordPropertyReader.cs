@@ -1977,6 +1977,7 @@ internal sealed class VectorStoreRecordPropertyReader
     /// <returns>The map from property names to the names that they would have if serialized to JSON.</returns>
     private static Dictionary<string, string> BuildPropertyNameToJsonPropertyNameMap(
         (List<VectorStoreRecordKeyProperty> keyProperties, List<VectorStoreRecordDataProperty> dataProperties, List<VectorStoreRecordVectorProperty> vectorProperties) properties,
+<<<<<<< main
 =======
 >>>>>>> main
 <<<<<<< Updated upstream
@@ -1998,6 +1999,8 @@ internal sealed class VectorStoreRecordPropertyReader
 >>>>>>> Stashed changes
         Type dataModel,
         JsonSerializerOptions options)
+=======
+>>>>>>> upstream/main
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type dataModel,
         JsonSerializerOptions? options)
     {

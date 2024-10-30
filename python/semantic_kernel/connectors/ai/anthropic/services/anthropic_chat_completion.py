@@ -527,7 +527,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 @experimental_class
 class AnthropicChatCompletion(ChatCompletionClientBase):
-    """Antropic ChatCompletion class."""
+    """Anthropic ChatCompletion class."""
 
 <<<<<<< HEAD
 <<<<<<< div

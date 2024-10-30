@@ -77,9 +77,15 @@ from typing import Any, Dict, List, Literal, Optional
 
 from typing import Any, Literal
 
+<<<<<<< main
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
+=======
+from pydantic import Field
+
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+>>>>>>> upstream/main
 
 
 class OllamaPromptExecutionSettings(PromptExecutionSettings):
@@ -238,6 +244,12 @@ class OllamaTextPromptExecutionSettings(OllamaPromptExecutionSettings):
 
 class OllamaChatPromptExecutionSettings(OllamaPromptExecutionSettings):
     """Settings for Ollama chat prompt execution."""
+
+    tools: list[dict[str, Any]] | None = Field(
+        None,
+        max_length=64,
+        description="Do not set this manually. It is set by the service based on the function choice configuration.",
+    )
 
 
 class OllamaEmbeddingPromptExecutionSettings(OllamaPromptExecutionSettings):

@@ -181,6 +181,12 @@ public static class ServiceCollectionExtensions
 <<<<<<< main
 =======
     [Obsolete("This has been replaced by the Microsoft.SemanticKernel.Connectors.InMemory nuget package.")]
+<<<<<<< main
+>>>>>>> upstream/main
+=======
+    [UnconditionalSuppressMessage("Trimming", "IL2091:Target generic argument does not satisfy 'DynamicallyAccessedMembersAttribute' in target method or type. The generic parameter of the source method or type does not have matching annotations.", Justification = "This method is obsolete")]
+    [UnconditionalSuppressMessage("Trimming", "IL2095:'DynamicallyAccessedMemberTypes' on the generic parameter of method or type don't match overridden generic parameter method or type. All overridden members must have the same 'DynamicallyAccessedMembersAttribute' usage.", Justification = "This method is obsolete")]
+
 >>>>>>> upstream/main
     public static IServiceCollection AddVolatileVectorStoreTextSearch<TKey, TRecord>(
         this IServiceCollection services,

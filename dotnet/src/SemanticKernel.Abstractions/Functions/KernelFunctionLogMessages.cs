@@ -3,6 +3,7 @@
 #pragma warning disable SYSLIB1006 // Multiple logging methods cannot use the same event id within a class
 
 using System;
+<<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -75,6 +76,11 @@ using System.Text.Json.Serialization.Metadata;
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+>>>>>>> upstream/main
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.SemanticKernel;
@@ -98,6 +104,7 @@ internal static partial class KernelFunctionLogMessages
         string functionName);
 
     /// <summary>
+<<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -164,6 +171,9 @@ internal static partial class KernelFunctionLogMessages
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+    /// Logs arguments of a <see cref="KernelFunction"/>.
+>>>>>>> upstream/main
     /// The action provides the benefit of caching the template parsing result for better performance.
     /// And the public method is a helper to serialize the arguments.
     /// </summary>
@@ -172,6 +182,7 @@ internal static partial class KernelFunctionLogMessages
             logLevel: LogLevel.Trace,   // Sensitive data, logging as trace, disabled by default
             eventId: 0,
             "Function arguments: {Arguments}");
+<<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -221,6 +232,13 @@ internal static partial class KernelFunctionLogMessages
     [RequiresDynamicCode("Uses reflection to serialize the function arguments, making it incompatible with AOT scenarios.")]
     public static void LogFunctionArguments(this ILogger logger, KernelArguments arguments)
     {
+=======
+
+    [RequiresUnreferencedCode("Uses reflection to serialize function arguments, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection to serialize the function arguments, making it incompatible with AOT scenarios.")]
+    public static void LogFunctionArguments(this ILogger logger, KernelArguments arguments)
+    {
+>>>>>>> upstream/main
         LogFunctionArgumentsInternal(logger, arguments);
     }
 
@@ -241,6 +259,7 @@ internal static partial class KernelFunctionLogMessages
     [RequiresDynamicCode("Uses reflection, if no JOSs are supplied, to serialize function arguments, making it incompatible with AOT scenarios.")]
     private static void LogFunctionArgumentsInternal(this ILogger logger, KernelArguments arguments, JsonSerializerOptions? jsonSerializerOptions = null)
     {
+<<<<<<< main
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -275,10 +294,13 @@ internal static partial class KernelFunctionLogMessages
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> upstream/main
         if (logger.IsEnabled(LogLevel.Trace))
         {
             try
             {
+<<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -319,6 +341,8 @@ internal static partial class KernelFunctionLogMessages
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> upstream/main
                 string jsonString;
 
                 if (jsonSerializerOptions is not null)
@@ -331,6 +355,7 @@ internal static partial class KernelFunctionLogMessages
                     jsonString = JsonSerializer.Serialize(arguments);
                 }
 
+<<<<<<< main
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -365,6 +390,8 @@ internal static partial class KernelFunctionLogMessages
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> upstream/main
                 s_logFunctionArguments(logger, jsonString, null);
             }
             catch (NotSupportedException ex)
@@ -393,6 +420,7 @@ internal static partial class KernelFunctionLogMessages
             logLevel: LogLevel.Trace,   // Sensitive data, logging as trace, disabled by default
             eventId: 0,
             "Function result: {ResultValue}");
+<<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -445,6 +473,12 @@ internal static partial class KernelFunctionLogMessages
     [RequiresDynamicCode("Uses reflection to serialize the function result, making it incompatible with AOT scenarios.")]
     public static void LogFunctionResultValue(this ILogger logger, FunctionResult? resultValue)
     {
+=======
+    [RequiresUnreferencedCode("Uses reflection to serialize function result, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection to serialize the function result, making it incompatible with AOT scenarios.")]
+    public static void LogFunctionResultValue(this ILogger logger, FunctionResult? resultValue)
+    {
+>>>>>>> upstream/main
         LogFunctionResultValueInternal(logger, resultValue);
     }
 
@@ -465,6 +499,7 @@ internal static partial class KernelFunctionLogMessages
     [RequiresDynamicCode("Uses reflection, if no JOSs are supplied, to serialize function arguments, making it incompatible with AOT scenarios.")]
     private static void LogFunctionResultValueInternal(this ILogger logger, FunctionResult? resultValue, JsonSerializerOptions? jsonSerializerOptions = null)
     {
+<<<<<<< main
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -499,6 +534,8 @@ internal static partial class KernelFunctionLogMessages
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> upstream/main
         if (logger.IsEnabled(LogLevel.Trace))
         {
             // Attempt to convert the result value to string using the GetValue heuristic
@@ -512,6 +549,7 @@ internal static partial class KernelFunctionLogMessages
             // Falling back to Json serialization
             try
             {
+<<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -552,6 +590,8 @@ internal static partial class KernelFunctionLogMessages
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> upstream/main
                 string jsonString;
 
                 if (jsonSerializerOptions is not null)
@@ -565,6 +605,7 @@ internal static partial class KernelFunctionLogMessages
                 }
 
                 s_logFunctionResultValue(logger, jsonString, null);
+<<<<<<< main
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -599,6 +640,8 @@ internal static partial class KernelFunctionLogMessages
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> upstream/main
             }
             catch (NotSupportedException ex)
             {

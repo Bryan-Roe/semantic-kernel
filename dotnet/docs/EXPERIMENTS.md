@@ -186,6 +186,7 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 >>>>>>> ms/main
 | SKEXP0100 | Advanced Semantic Kernel features |
 | SKEXP0110 | Semantic Kernel Agents |
+<<<<<<< main
 <<<<<<< div
 <<<<<<< div
 =======
@@ -220,6 +221,9 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 >>>>>>> Stashed changes
 >>>>>>> origin/main
 >>>>>>> head
+=======
+| SKEXP0120 | Native-AOT |
+>>>>>>> upstream/main
 
 ## Experimental Features Tracking
 
@@ -502,3 +506,8 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 | SKEXP0101 | Experiment with Flow Orchestration |
 | | | | | | | |
 | SKEXP0110 | Agent Framework |
+<<<<<<< main
+=======
+| | | | | | | |
+| SKEXP0120 | Native-AOT |
+>>>>>>> upstream/main

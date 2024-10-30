@@ -78,6 +78,10 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
     /// <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
     /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
     /// <returns>The created <see cref="KernelFunction"/> wrapper for <paramref name="method"/>.</returns>
+<<<<<<< main
+=======
+    [Experimental("SKEXP0120")]
+>>>>>>> upstream/main
     public static KernelFunction Create(
         MethodInfo method,
         JsonSerializerOptions jsonSerializerOptions,
@@ -143,6 +147,9 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
 
     /// <summary>
 <<<<<<< main
+<<<<<<< main
+=======
+>>>>>>> upstream/main
     /// Creates a <see cref="KernelFunction"/> instance for a method, specified via an <see cref="MethodInfo"/> instance
     /// and an optional target object if the method is an instance method.
     /// </summary>
@@ -151,6 +158,10 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
     /// <param name="target">The target object for the <paramref name="method"/> if it represents an instance method. This should be null if and only if <paramref name="method"/> is a static method.</param>
     /// <param name="options">Optional function creation options.</param>
     /// <returns>The created <see cref="KernelFunction"/> wrapper for <paramref name="method"/>.</returns>
+<<<<<<< main
+=======
+    [Experimental("SKEXP0120")]
+>>>>>>> upstream/main
     public static KernelFunction Create(
         MethodInfo method,
         JsonSerializerOptions jsonSerializerOptions,
@@ -165,7 +176,29 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
         }
 
         MethodDetails methodDetails = GetMethodDetails(options?.FunctionName, method, jsonSerializerOptions, target);
+<<<<<<< main
 =======
+=======
+        var result = new KernelFunctionFromMethod(
+            methodDetails.Function,
+            methodDetails.Name,
+            options?.Description ?? methodDetails.Description,
+            options?.Parameters?.ToList() ?? methodDetails.Parameters,
+            options?.ReturnParameter ?? methodDetails.ReturnParameter,
+            jsonSerializerOptions,
+            options?.AdditionalMetadata);
+
+        if (options?.LoggerFactory?.CreateLogger(method.DeclaringType ?? typeof(KernelFunctionFromPrompt)) is ILogger logger &&
+            logger.IsEnabled(LogLevel.Trace))
+        {
+            logger.LogTrace("Created KernelFunction '{Name}' for '{MethodName}'", result.Name, method.Name);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+>>>>>>> upstream/main
     /// Creates a <see cref="KernelFunctionMetadata"/> instance for a method, specified via an <see cref="MethodInfo"/> instance.
     /// </summary>
     /// <param name="method">The method to be represented via the created <see cref="KernelFunction"/>.</param>
@@ -176,6 +209,8 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
     /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
     /// <returns>The created <see cref="KernelFunction"/> wrapper for <paramref name="method"/>.</returns>
     [Experimental("SKEXP0001")]
+    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     public static KernelFunctionMetadata CreateMetadata(
         MethodInfo method,
         string? functionName = null,
@@ -198,9 +233,43 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
     /// Creates a <see cref="KernelFunctionMetadata"/> instance for a method, specified via an <see cref="MethodInfo"/> instance.
     /// </summary>
     /// <param name="method">The method to be represented via the created <see cref="KernelFunction"/>.</param>
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
+    /// <param name="functionName">The name to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+    /// <param name="description">The description to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>, if possible (e.g. via a <see cref="DescriptionAttribute"/> on the method).</param>
+    /// <param name="parameters">Optional parameter descriptions. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+    /// <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+    /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+    /// <returns>The created <see cref="KernelFunction"/> wrapper for <paramref name="method"/>.</returns>
+    [Experimental("SKEXP0120")]
+    public static KernelFunctionMetadata CreateMetadata(
+        MethodInfo method,
+        JsonSerializerOptions jsonSerializerOptions,
+        string? functionName = null,
+        string? description = null,
+        IEnumerable<KernelParameterMetadata>? parameters = null,
+        KernelReturnParameterMetadata? returnParameter = null,
+        ILoggerFactory? loggerFactory = null)
+        => CreateMetadata(
+            method,
+            jsonSerializerOptions,
+            new KernelFunctionFromMethodOptions
+            {
+                FunctionName = functionName,
+                Description = description,
+                Parameters = parameters,
+                ReturnParameter = returnParameter,
+                LoggerFactory = loggerFactory
+            });
+
+    /// <summary>
+    /// Creates a <see cref="KernelFunctionMetadata"/> instance for a method, specified via an <see cref="MethodInfo"/> instance.
+    /// </summary>
+    /// <param name="method">The method to be represented via the created <see cref="KernelFunction"/>.</param>
     /// <param name="options">Optional function creation options.</param>
     /// <returns>The created <see cref="KernelFunction"/> wrapper for <paramref name="method"/>.</returns>
     [Experimental("SKEXP0001")]
+    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     public static KernelFunctionMetadata CreateMetadata(
         MethodInfo method,
         KernelFunctionFromMethodOptions? options = default)
@@ -235,6 +304,40 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
 
         return result.Metadata;
 >>>>>>> upstream/main
+    }
+
+    /// <summary>
+    /// Creates a <see cref="KernelFunctionMetadata"/> instance for a method, specified via an <see cref="MethodInfo"/> instance.
+    /// </summary>
+    /// <param name="method">The method to be represented via the created <see cref="KernelFunction"/>.</param>
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
+    /// <param name="options">Optional function creation options.</param>
+    /// <returns>The created <see cref="KernelFunction"/> wrapper for <paramref name="method"/>.</returns>
+    [Experimental("SKEXP0120")]
+    public static KernelFunctionMetadata CreateMetadata(
+        MethodInfo method,
+        JsonSerializerOptions jsonSerializerOptions,
+        KernelFunctionFromMethodOptions? options = default)
+    {
+        Verify.NotNull(method);
+
+        MethodDetails methodDetails = GetMethodDetails(options?.FunctionName, method, jsonSerializerOptions, target: null);
+        var result = new KernelFunctionFromMethod(
+            methodDetails.Function,
+            methodDetails.Name,
+            options?.Description ?? methodDetails.Description,
+            options?.Parameters?.ToList() ?? methodDetails.Parameters,
+            options?.ReturnParameter ?? methodDetails.ReturnParameter,
+            jsonSerializerOptions,
+            options?.AdditionalMetadata);
+
+        if (options?.LoggerFactory?.CreateLogger(method.DeclaringType ?? typeof(KernelFunctionFromPrompt)) is ILogger logger &&
+            logger.IsEnabled(LogLevel.Trace))
+        {
+            logger.LogTrace("Created KernelFunctionMetadata '{Name}' for '{MethodName}'", result.Name, method.Name);
+        }
+
+        return result.Metadata;
     }
 
     /// <inheritdoc/>

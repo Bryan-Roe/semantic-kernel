@@ -15,10 +15,15 @@ namespace SemanticKernel.IntegrationTests.Plugins.Web.Google;
 public class GoogleTextSearchTests : BaseTextSearchTests
 {
 <<<<<<< main
+<<<<<<< main
 <<<<<<< HEAD
 =======
     // If null, all tests will be enabled
     private const string SkipReason = "Failing in integration test pipeline so disabling while investigating a fix (issue 9168)";
+=======
+    // If null, all tests will be enabled
+    private const string SkipReason = "Failing in integration test pipeline because daily quota exceeded";
+>>>>>>> upstream/main
 
     [Fact(Skip = SkipReason)]
     public override async Task CanSearchAsync()
@@ -62,7 +67,10 @@ public class GoogleTextSearchTests : BaseTextSearchTests
         await base.FunctionCallingUsingGetTextSearchResultsAsync();
     }
 
+<<<<<<< main
 >>>>>>> main
+=======
+>>>>>>> upstream/main
 =======
 >>>>>>> upstream/main
     /// <inheritdoc/>

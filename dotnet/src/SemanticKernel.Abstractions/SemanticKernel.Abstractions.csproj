@@ -50,6 +50,7 @@
     <RootNamespace>Microsoft.SemanticKernel</RootNamespace>
     <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
 <<<<<<< main
+<<<<<<< main
     <NoWarn>$(NoWarn);SKEXP0001;SKEXP0005</NoWarn>
 =======
     <NoWarn>$(NoWarn);SKEXP0001;NU5104</NoWarn>
@@ -119,6 +120,11 @@
 >>>>>>> main
 =======
 >>>>>>> head
+=======
+    <NoWarn>$(NoWarn);SKEXP0001;NU5104;SKEXP0120</NoWarn>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+>>>>>>> upstream/main
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsReleaseCandidate)' == 'true'">
@@ -154,6 +160,7 @@
     <InternalsVisibleTo Include="SemanticKernel.Extensions.PromptTemplates.Liquid.UnitTests" />
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" /> <!-- Moq -->
   </ItemGroup>
+<<<<<<< main
 <<<<<<< div
 <<<<<<< div
 =======
@@ -189,6 +196,8 @@
 >>>>>>> main
 =======
 >>>>>>> head
+=======
+>>>>>>> upstream/main
 
   <ItemGroup>
     <!-- Exclude utilities that are not used by the project and causing AOT warnings-->
@@ -205,6 +214,7 @@
     <Compile Remove="$(RepoRoot)/dotnet/src/InternalUtilities/src/Type/**/*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   
+<<<<<<< main
 <<<<<<< div
 <<<<<<< div
 =======
@@ -238,4 +248,6 @@
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> upstream/main
 </Project>

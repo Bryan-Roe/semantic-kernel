@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+<<<<<<< main
 <<<<<<< Updated upstream
 using System.Text.Json.Serialization.Metadata;
 =======
@@ -47,6 +48,9 @@ using System.Text.Json.Serialization.Metadata;
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+using System.Text.Json.Serialization.Metadata;
+>>>>>>> upstream/main
 
 namespace Microsoft.SemanticKernel;
 
@@ -74,6 +78,10 @@ private Dictionary<int, string> _functionCallIdsByIndex = new();
     /// Creates a new instance of the <see cref="FunctionCallContentBuilder"/> class.
     /// </summary>
     /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for deserializing function arguments.</param>
+<<<<<<< main
+=======
+    [Experimental("SKEXP0120")]
+>>>>>>> upstream/main
     public FunctionCallContentBuilder(JsonSerializerOptions jsonSerializerOptions)
     {
         this._jsonSerializerOptions = jsonSerializerOptions;
@@ -206,6 +214,7 @@ public void Append(StreamingChatMessageContent content)
                     functionName = functionFullyQualifiedName.Name;
                 }
 
+<<<<<<< main
 <<<<<<< Updated upstream
                 (KernelArguments? arguments, Exception? exception) = this.GetFunctionArguments(functionCallIndexAndId.Key);
 =======
@@ -254,6 +263,9 @@ public void Append(StreamingChatMessageContent content)
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+                (KernelArguments? arguments, Exception? exception) = GetFunctionArgumentsSafe(functionCallIndexAndId.Key);
+>>>>>>> upstream/main
 
                 functionCalls[i] = new FunctionCallContent(
                     functionName: functionName,
@@ -285,6 +297,7 @@ public void Append(StreamingChatMessageContent content)
     /// Gets function arguments for a given function call index.
     /// </summary>
     /// <param name="functionCallIndex">The function call index to get the function arguments for.</param>
+<<<<<<< main
 <<<<<<< Updated upstream
     /// <returns>A tuple containing the KernelArguments and an Exception if any.</returns>
     private (KernelArguments? Arguments, Exception? Exception) GetFunctionArguments(int functionCallIndex)
@@ -341,6 +354,13 @@ public void Append(StreamingChatMessageContent content)
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for deserializing function arguments.</param>
+    /// <returns>A tuple containing the KernelArguments and an Exception if any.</returns>
+    [RequiresUnreferencedCode("Uses reflection to deserialize function arguments if no JSOs are provided, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection to deserialize function arguments if no JSOs are provided, making it incompatible with AOT scenarios.")]
+    private (KernelArguments? Arguments, Exception? Exception) GetFunctionArguments(int functionCallIndex, JsonSerializerOptions? jsonSerializerOptions = null)
+>>>>>>> upstream/main
     {
         if (this._functionArgumentBuildersByIndex is null ||
             !this._functionArgumentBuildersByIndex.TryGetValue(functionCallIndex, out StringBuilder? functionArgumentsBuilder))
@@ -358,6 +378,7 @@ public void Append(StreamingChatMessageContent content)
         KernelArguments? arguments = null;
         try
         {
+<<<<<<< main
 <<<<<<< Updated upstream
             arguments = JsonSerializer.Deserialize<KernelArguments>(argumentsString);
 =======
@@ -384,6 +405,8 @@ public void Append(StreamingChatMessageContent content)
             arguments = JsonSerializer.Deserialize<KernelArguments>(argumentsString);
             arguments = JsonSerializer.Deserialize<KernelArguments>(argumentsString);
             arguments = JsonSerializer.Deserialize<KernelArguments>(argumentsString);
+=======
+>>>>>>> upstream/main
             if (jsonSerializerOptions is not null)
             {
                 var typeInfo = (JsonTypeInfo<KernelArguments>)jsonSerializerOptions.GetTypeInfo(typeof(KernelArguments));
@@ -394,6 +417,7 @@ public void Append(StreamingChatMessageContent content)
                 arguments = JsonSerializer.Deserialize<KernelArguments>(argumentsString);
             }
 
+<<<<<<< main
 <<<<<<< Updated upstream
 =======
 >>>>>>> main
@@ -414,6 +438,8 @@ public void Append(StreamingChatMessageContent content)
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+>>>>>>> upstream/main
             if (arguments is { Count: > 0 })
             {
                 var names = arguments.Names.ToArray();

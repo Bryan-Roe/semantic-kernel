@@ -7,7 +7,7 @@
     <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NoWarn>$(NoWarn);SKEXP0001</NoWarn>
+    <NoWarn>$(NoWarn);SKEXP0001,SKEXP0120</NoWarn>
     <EnablePackageValidation>true</EnablePackageValidation>
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
   </PropertyGroup>
@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="SemanticKernel.UnitTests" />
+    <InternalsVisibleTo Include="SemanticKernel.AotTests" />
     <InternalsVisibleTo Include="SemanticKernel.Extensions.UnitTests" />
   </ItemGroup>
 
@@ -105,6 +106,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.SemanticKernel.Experimental.Assistants" />
+<<<<<<< main
 <<<<<<< div
 <<<<<<< div
 =======
@@ -156,6 +158,10 @@
 >>>>>>> head
   </ItemGroup>
 
+=======
+  </ItemGroup>
+
+>>>>>>> upstream/main
   <ItemGroup>
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Data/VectorStoreRecordPropertyReader.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Data/VectorStoreRecordPropertyReaderOptions.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
@@ -163,6 +169,7 @@
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/JsonOptionsCache.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   
+<<<<<<< main
 <<<<<<< div
 <<<<<<< div
 =======
@@ -196,4 +203,6 @@
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> upstream/main
 </Project>

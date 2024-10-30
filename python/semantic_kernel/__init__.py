@@ -2,6 +2,7 @@
 
 from semantic_kernel.kernel import Kernel
 
+<<<<<<< main
 <<<<<<< div
 <<<<<<< div
 =======
@@ -234,6 +235,9 @@ __all__ = [
     "memory",
 ]
 __version__ = "1.8.1"
+=======
+__version__ = "1.12.1"
+>>>>>>> upstream/main
 __all__ = ["Kernel", "__version__"]
 <<<<<<< div
 <<<<<<< div

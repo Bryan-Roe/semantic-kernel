@@ -7,7 +7,11 @@ using System.Linq;
 using Microsoft.SemanticKernel.Data;
 =======
 using Microsoft.Extensions.VectorData;
+<<<<<<< main
 >>>>>>> main
+=======
+using Microsoft.SemanticKernel.Connectors.MongoDB;
+>>>>>>> upstream/main
 using MongoDB.Bson;
 
 namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
@@ -17,13 +21,18 @@ namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
 /// </summary>
 internal static class AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping
 {
+<<<<<<< main
 <<<<<<< HEAD
 =======
     /// <summary>Returns index kind specified on vector property or default <see cref="AzureCosmosDBMongoDBConstants.DefaultIndexKind"/>.</summary>
     public static string GetVectorPropertyIndexKind(string? indexKind) => !string.IsNullOrWhiteSpace(indexKind) ? indexKind! : AzureCosmosDBMongoDBConstants.DefaultIndexKind;
+=======
+    /// <summary>Returns index kind specified on vector property or default <see cref="MongoDBConstants.DefaultIndexKind"/>.</summary>
+    public static string GetVectorPropertyIndexKind(string? indexKind) => !string.IsNullOrWhiteSpace(indexKind) ? indexKind! : MongoDBConstants.DefaultIndexKind;
+>>>>>>> upstream/main
 
-    /// <summary>Returns distance function specified on vector property or default <see cref="AzureCosmosDBMongoDBConstants.DefaultDistanceFunction"/>.</summary>
-    public static string GetVectorPropertyDistanceFunction(string? distanceFunction) => !string.IsNullOrWhiteSpace(distanceFunction) ? distanceFunction! : AzureCosmosDBMongoDBConstants.DefaultDistanceFunction;
+    /// <summary>Returns distance function specified on vector property or default <see cref="MongoDBConstants.DefaultDistanceFunction"/>.</summary>
+    public static string GetVectorPropertyDistanceFunction(string? distanceFunction) => !string.IsNullOrWhiteSpace(distanceFunction) ? distanceFunction! : MongoDBConstants.DefaultDistanceFunction;
 
 >>>>>>> main
     /// <summary>

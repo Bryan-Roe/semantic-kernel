@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+<<<<<<< main
 using System.Collections.Generic;
 using System.Linq;
 <<<<<<< main
@@ -71,6 +72,8 @@ using System.Text.Json.Nodes;
 >>>>>>> head
 using Microsoft.SemanticKernel.Data;
 =======
+=======
+>>>>>>> upstream/main
 using Microsoft.Extensions.VectorData;
 >>>>>>> upstream/main
 using Pinecone;
@@ -83,6 +86,7 @@ namespace Microsoft.SemanticKernel.Connectors.Pinecone;
 /// <typeparam name="TRecord">The consumer data model to map to or from.</typeparam>
 internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRecordMapper<TRecord, Vector>
 {
+<<<<<<< main
     /// <summary>A set of types that a key on the provided model may have.</summary>
     private static readonly HashSet<Type> s_supportedKeyTypes = [typeof(string)];
 
@@ -182,6 +186,8 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
 >>>>>>> Stashed changes
 =======
 =======
+=======
+>>>>>>> upstream/main
     private readonly VectorStoreRecordPropertyReader _propertyReader;
 >>>>>>> main
 >>>>>>> Stashed changes
@@ -310,9 +316,9 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
     {
         // Validate property types.
         propertyReader.VerifyHasParameterlessConstructor();
-        propertyReader.VerifyKeyProperties(s_supportedKeyTypes);
-        propertyReader.VerifyDataProperties(s_supportedDataTypes, s_supportedEnumerableDataElementTypes);
-        propertyReader.VerifyVectorProperties(s_supportedVectorTypes);
+        propertyReader.VerifyKeyProperties(PineconeVectorStoreRecordFieldMapping.s_supportedKeyTypes);
+        propertyReader.VerifyDataProperties(PineconeVectorStoreRecordFieldMapping.s_supportedDataTypes, PineconeVectorStoreRecordFieldMapping.s_supportedEnumerableDataElementTypes);
+        propertyReader.VerifyVectorProperties(PineconeVectorStoreRecordFieldMapping.s_supportedVectorTypes);
 
         // Assign.
         this._propertyReader = propertyReader;
@@ -482,7 +488,7 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
             var propertyValue = dataPropertyInfo.GetValue(dataModel);
             if (propertyValue != null)
             {
-                metadata[propertyName] = ConvertToMetadataValue(propertyValue);
+                metadata[propertyName] = PineconeVectorStoreRecordFieldMapping.ConvertToMetadataValue(propertyValue);
             }
         }
 
@@ -750,11 +756,12 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
                 this._propertyReader.DataPropertiesInfo,
                 this._propertyReader.StoragePropertyNamesMap,
                 storageModel.Metadata,
-                ConvertFromMetadataValueToNativeType);
+                PineconeVectorStoreRecordFieldMapping.ConvertFromMetadataValueToNativeType);
         }
 
         return outputRecord;
     }
+<<<<<<< main
 
     private static object? ConvertFromMetadataValueToNativeType(MetadataValue metadataValue, Type targetType)
         => metadataValue.Inner switch
@@ -842,4 +849,6 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
             IEnumerable<string> stringEnumerable => stringEnumerable.ToArray(),
             _ => throw new VectorStoreRecordMappingException($"Unsupported source value type '{sourceValue?.GetType().FullName}'.")
         };
+=======
+>>>>>>> upstream/main
 }

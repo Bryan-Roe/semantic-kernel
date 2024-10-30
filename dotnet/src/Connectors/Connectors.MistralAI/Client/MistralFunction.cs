@@ -140,6 +140,7 @@ internal sealed partial class MistralFunction
         // If there's a description, incorporate it.
         if (!string.IsNullOrWhiteSpace(description))
         {
+<<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -206,6 +207,9 @@ internal sealed partial class MistralFunction
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+            return KernelJsonSchemaBuilder.Build(typeof(string), description);
+>>>>>>> upstream/main
         }
 
         // Otherwise, we can use a cached schema for a string with no description.

@@ -16,11 +16,6 @@ public record KernelProcessStepInfo
     private KernelProcessStepState _state;
 
     /// <summary>
-    /// A mapping of output edges from the Step using the .
-    /// </summary>
-    private readonly Dictionary<string, List<KernelProcessEdge>> _outputEdges;
-
-    /// <summary>
     /// The type of the inner step.
     /// </summary>
     internal Type InnerStepType { get; }
@@ -65,8 +60,7 @@ public record KernelProcessStepInfo
     /// <summary>
     /// A read-only dictionary of output edges from the Step.
     /// </summary>
-    public IReadOnlyDictionary<string, IReadOnlyCollection<KernelProcessEdge>> Edges =>
-        this._outputEdges.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyCollection<KernelProcessEdge>)kvp.Value.AsReadOnly());
+    public IReadOnlyDictionary<string, IReadOnlyCollection<KernelProcessEdge>> Edges { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="KernelProcessStepInfo"/> class.
@@ -78,8 +72,12 @@ public record KernelProcessStepInfo
         Verify.NotNull(state);
 
         this.InnerStepType = innerStepType;
+<<<<<<< main
         this._outputEdges = edges;
         this.State = state;
+=======
+        this.Edges = edges.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyCollection<KernelProcessEdge>)kvp.Value.AsReadOnly());
+>>>>>>> upstream/main
         this._state = state;
 
         // Register the state as a know type for the DataContractSerialization used by Dapr.

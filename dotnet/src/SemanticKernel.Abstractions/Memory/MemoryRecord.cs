@@ -33,6 +33,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.SemanticKernel.Text;
+<<<<<<< main
 <<<<<<< Updated upstream
 =======
 <<<<<<< Updated upstream
@@ -61,6 +62,8 @@ using Microsoft.SemanticKernel.Diagnostics;
 >>>>>>> Stashed changes
 using Microsoft.SemanticKernel.AI.Embeddings;
 using Microsoft.SemanticKernel.Diagnostics;
+=======
+>>>>>>> upstream/main
 
 namespace Microsoft.SemanticKernel.Memory;
 
@@ -237,6 +240,7 @@ public class MemoryRecord : DataEntryBase
         string? key = null,
         DateTimeOffset? timestamp = null)
     {
+<<<<<<< main
         var metadata = JsonSerializer.Deserialize<MemoryRecordMetadata>(json);
 <<<<<<< Updated upstream
         return metadata is not null
@@ -281,6 +285,8 @@ public class MemoryRecord : DataEntryBase
         return metadata != null
             ? new MemoryRecord(metadata, embedding ?? Embedding<float>.Empty, key, timestamp)
             : throw new SKException("Unable to create memory record from serialized metadata");
+=======
+>>>>>>> upstream/main
         var metadata = JsonSerializer.Deserialize<MemoryRecordMetadata>(json, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
         return metadata is not null
             ? new MemoryRecord(metadata, embedding, key, timestamp)
@@ -332,6 +338,7 @@ public class MemoryRecord : DataEntryBase
     /// <returns>The memory record's metadata serialized to a json string.</returns>
     public string GetSerializedMetadata()
     {
+<<<<<<< main
 <<<<<<< Updated upstream
         return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
 =======
@@ -361,5 +368,8 @@ public class MemoryRecord : DataEntryBase
         return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+        return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
+>>>>>>> upstream/main
     }
 }

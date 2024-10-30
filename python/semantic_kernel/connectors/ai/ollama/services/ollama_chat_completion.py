@@ -20,7 +20,7 @@ import logging
 =======
 >>>>>>> Stashed changes
 import sys
-from collections.abc import AsyncGenerator, AsyncIterator, Mapping
+from collections.abc import AsyncGenerator, AsyncIterator, Callable, Mapping
 from typing import TYPE_CHECKING, Any, ClassVar
 =======
 <<<<<<< Updated upstream
@@ -97,8 +97,10 @@ else:
     from typing_extensions import override  # pragma: no cover
 
 from ollama import AsyncClient
+from ollama._types import Message
 from pydantic import ValidationError
 
+<<<<<<< main
 from semantic_kernel.connectors.ai.chat_completion_client_base import (
     ChatCompletionClientBase,
 )
@@ -180,11 +182,26 @@ from semantic_kernel.contents.text_content import TextContent
 from semantic_kernel.exceptions.service_exceptions import (
     ServiceInitializationError,
     ServiceInvalidResponseError,
+=======
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.connectors.ai.completion_usage import CompletionUsage
+from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
+from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import OllamaChatPromptExecutionSettings
+from semantic_kernel.connectors.ai.ollama.ollama_settings import OllamaSettings
+from semantic_kernel.connectors.ai.ollama.services.ollama_base import OllamaBase
+from semantic_kernel.connectors.ai.ollama.services.utils import (
+    MESSAGE_CONVERTERS,
+    update_settings_from_function_choice_configuration,
+>>>>>>> upstream/main
 )
 from semantic_kernel.contents import AuthorRole
 from semantic_kernel.contents.chat_history import ChatHistory
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.chat_message_content import ITEM_TYPES, ChatMessageContent
+from semantic_kernel.contents.function_call_content import FunctionCallContent
+from semantic_kernel.contents.streaming_chat_message_content import ITEM_TYPES as STREAMING_ITEM_TYPES
 from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
+<<<<<<< main
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError, ServiceInvalidResponseError
 <<<<<<< HEAD
 <<<<<<< div
@@ -265,6 +282,19 @@ from semantic_kernel.utils.telemetry.model_diagnostics.decorators import trace_c
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+from semantic_kernel.contents.streaming_text_content import StreamingTextContent
+from semantic_kernel.contents.text_content import TextContent
+from semantic_kernel.exceptions.service_exceptions import (
+    ServiceInitializationError,
+    ServiceInvalidExecutionSettingsError,
+    ServiceInvalidResponseError,
+)
+from semantic_kernel.utils.telemetry.model_diagnostics.decorators import (
+    trace_chat_completion,
+    trace_streaming_chat_completion,
+)
+>>>>>>> upstream/main
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
@@ -498,7 +528,7 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
     Make sure to have the ollama service running either locally or remotely.
     """
 
-    SUPPORTS_FUNCTION_CALLING: ClassVar[bool] = False
+    SUPPORTS_FUNCTION_CALLING: ClassVar[bool] = True
 
     def __init__(
         self,
@@ -659,7 +689,7 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
         """
         try:
             ollama_settings = OllamaSettings.create(
-                model=ai_model_id,
+                chat_model_id=ai_model_id,
                 host=host,
                 env_file_path=env_file_path,
                 env_file_encoding=env_file_encoding,
@@ -669,6 +699,7 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
                 "Failed to create Ollama settings.", ex
             ) from ex
 
+<<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -730,10 +761,14 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
 >>>>>>> head
         if not ollama_settings.model:
             raise ServiceInitializationError("Please provide ai_model_id or OLLAMA_MODEL env variable is required")
+=======
+        if not ollama_settings.chat_model_id:
+            raise ServiceInitializationError("Ollama chat model ID is required.")
+>>>>>>> upstream/main
 
         super().__init__(
-            service_id=service_id or ollama_settings.model,
-            ai_model_id=ollama_settings.model,
+            service_id=service_id or ollama_settings.chat_model_id,
+            ai_model_id=ollama_settings.chat_model_id,
             client=client or AsyncClient(host=ollama_settings.host),
         )
 
@@ -803,6 +838,36 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
     def get_prompt_execution_settings_class(self) -> type["PromptExecutionSettings"]:
         """Get the request settings class."""
         return OllamaChatPromptExecutionSettings
+
+    @override
+    def _prepare_chat_history_for_request(
+        self,
+        chat_history: ChatHistory,
+        role_key: str = "role",
+        content_key: str = "content",
+    ) -> list[Message]:
+        return [MESSAGE_CONVERTERS[message.role](message) for message in chat_history.messages]
+
+    @override
+    def _verify_function_choice_settings(self, settings: "PromptExecutionSettings") -> None:
+        if settings.function_choice_behavior and settings.function_choice_behavior.type_ in [
+            FunctionChoiceType.REQUIRED,
+            FunctionChoiceType.NONE,
+        ]:
+            raise ServiceInvalidExecutionSettingsError(
+                "Ollama does not support function choice behavior of type 'required' or 'none' yet."
+            )
+
+    @override
+    def _update_function_choice_settings_callback(
+        self,
+    ) -> Callable[[FunctionCallChoiceConfiguration, "PromptExecutionSettings", FunctionChoiceType], None]:
+        return update_settings_from_function_choice_configuration
+
+    @override
+    def _reset_function_choice_settings(self, settings: "PromptExecutionSettings") -> None:
+        if hasattr(settings, "tools"):
+            settings.tools = None
 
     @override
     @trace_chat_completion(OllamaBase.MODEL_PROVIDER_NAME)
@@ -910,6 +975,7 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
             )
 
         return [
+<<<<<<< main
             ChatMessageContent(
                 inner_content=response_object,
                 ai_model_id=self.ai_model_id,
@@ -917,6 +983,11 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
                 content=response_object.get("message", {"content": None}).get(
                     "content", None
                 ),
+=======
+            self._create_chat_message_content(
+                response_object,
+                self._get_metadata_from_response(response_object),
+>>>>>>> upstream/main
             )
         ]
 
@@ -929,6 +1000,11 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
         if not isinstance(settings, OllamaChatPromptExecutionSettings):
             settings = self.get_prompt_execution_settings_from_settings(settings)
         assert isinstance(settings, OllamaChatPromptExecutionSettings)  # nosec
+
+        if settings.tools:
+            raise ServiceInvalidExecutionSettingsError(
+                "Ollama does not support tool calling in streaming chat completion."
+            )
 
         prepared_chat_history = self._prepare_chat_history_for_request(chat_history)
 
@@ -947,12 +1023,9 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
 
         async for part in response_object:
             yield [
-                StreamingChatMessageContent(
-                    role=AuthorRole.ASSISTANT,
-                    choice_index=0,
-                    inner_content=part,
-                    ai_model_id=self.ai_model_id,
-                    content=part.get("message", {"content": None}).get("content", None),
+                self._create_streaming_chat_message_content(
+                    part,
+                    self._get_metadata_from_response(part),
                 )
             ]
 
@@ -1332,3 +1405,74 @@ class OllamaChatCompletion(TextCompletionClientBase, ChatCompletionClientBase):
         """Get the request settings class."""
         return OllamaChatPromptExecutionSettings
     # endregion
+
+    def _create_chat_message_content(self, response: Mapping[str, Any], metadata: dict[str, Any]) -> ChatMessageContent:
+        """Create a chat message content from the response."""
+        items: list[ITEM_TYPES] = []
+        if not (message := response.get("message", None)):
+            raise ServiceInvalidResponseError("No message content found in response.")
+
+        if content := message.get("content", None):
+            items.append(
+                TextContent(
+                    text=content,
+                    inner_content=message,
+                )
+            )
+        if tool_calls := message.get("tool_calls", None):
+            for tool_call in tool_calls:
+                items.append(
+                    FunctionCallContent(
+                        inner_content=tool_call,
+                        ai_model_id=self.ai_model_id,
+                        name=tool_call.get("function").get("name"),
+                        arguments=tool_call.get("function").get("arguments"),
+                    )
+                )
+
+        return ChatMessageContent(
+            role=AuthorRole.ASSISTANT,
+            items=items,
+            inner_content=response,
+            metadata=metadata,
+        )
+
+    def _create_streaming_chat_message_content(
+        self, part: Mapping[str, Any], metadata: dict[str, Any]
+    ) -> StreamingChatMessageContent:
+        """Create a streaming chat message content from the response part."""
+        items: list[STREAMING_ITEM_TYPES] = []
+        if not (message := part.get("message", None)):
+            raise ServiceInvalidResponseError("No message content found in response part.")
+
+        if content := message.get("content", None):
+            items.append(
+                StreamingTextContent(
+                    choice_index=0,
+                    text=content,
+                    inner_content=message,
+                )
+            )
+
+        return StreamingChatMessageContent(
+            role=AuthorRole.ASSISTANT,
+            choice_index=0,
+            items=items,
+            inner_content=part,
+            ai_model_id=self.ai_model_id,
+            metadata=metadata,
+        )
+
+    def _get_metadata_from_response(self, response: Mapping[str, Any]) -> dict[str, Any]:
+        """Get metadata from the response."""
+        metadata = {
+            "model": response.get("model"),
+        }
+
+        if "prompt_eval_count" in response and "eval_count" in response:
+            metadata["usage"] = CompletionUsage(
+                prompt_tokens=response.get("prompt_eval_count"),
+                completion_tokens=response.get("eval_count"),
+            )
+
+        return metadata
