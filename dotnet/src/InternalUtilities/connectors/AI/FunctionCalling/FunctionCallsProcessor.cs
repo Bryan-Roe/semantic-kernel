@@ -130,6 +130,7 @@ internal sealed class FunctionCallsProcessor
     /// <param name="requestIndex">AI model function(s) call request sequence index.</param>
     /// <param name="checkIfFunctionAdvertised">Callback to check if a function was advertised to AI model or not.</param>
     /// <param name="kernel">The <see cref="Kernel"/>.</param>
+    /// <param name="isStreaming">Boolean flag which indicates whether an operation is invoked within streaming or non-streaming mode.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests.</param>
     /// <returns>Last chat history message if function invocation filter requested processing termination, otherwise null.</returns>
     public async Task<ChatMessageContent?> ProcessFunctionCallsAsync(
@@ -138,6 +139,7 @@ internal sealed class FunctionCallsProcessor
         int requestIndex,
         Func<FunctionCallContent, bool> checkIfFunctionAdvertised,
         Kernel? kernel,
+        bool isStreaming,
         CancellationToken cancellationToken)
     {
         var functionCalls = FunctionCallContent.GetFunctionCalls(chatMessageContent).ToList();
@@ -196,7 +198,9 @@ internal sealed class FunctionCallsProcessor
                 Arguments = functionCall.Arguments,
                 RequestSequenceIndex = requestIndex,
                 FunctionSequenceIndex = functionCallIndex,
-                FunctionCount = functionCalls.Count
+                FunctionCount = functionCalls.Count,
+                CancellationToken = cancellationToken,
+                IsStreaming = isStreaming
             };
 
             s_inflightAutoInvokes.Value++;

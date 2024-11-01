@@ -1,7 +1,12 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 from semantic_kernel.kernel import Kernel
+<<<<<<< main
 __version__ = "1.12.1"
+=======
+
+__version__ = "1.13.0"
+>>>>>>> microsoft/main
 __all__ = ["Kernel", "__version__"]
 import semantic_kernel.memory as memory
 from semantic_kernel.configuration.kernel_config import KernelConfig
