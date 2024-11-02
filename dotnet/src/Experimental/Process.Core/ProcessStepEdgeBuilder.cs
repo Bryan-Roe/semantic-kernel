@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using Microsoft.SemanticKernel.Process.Internal;
 
 namespace Microsoft.SemanticKernel;
 
@@ -108,6 +109,6 @@ public sealed class ProcessStepEdgeBuilder
         var outputTarget = new ProcessFunctionTargetBuilder(EndStep.Instance);
         this.OutputTarget = outputTarget;
         this.Target = outputTarget;
-        this.Source.LinkTo(EndStep.EndStepName, this);
+        this.Source.LinkTo(ProcessConstants.EndStepName, this);
     }
 }

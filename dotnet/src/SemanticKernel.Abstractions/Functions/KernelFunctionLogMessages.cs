@@ -1,80 +1,14 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 #pragma warning disable SYSLIB1006 // Multiple logging methods cannot use the same event id within a class
 
 using System;
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 using System.Text.Json;
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-using System.Text.Json;
-=======
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization.Metadata;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.SemanticKernel;
@@ -92,136 +26,41 @@ internal static partial class KernelFunctionLogMessages
     [LoggerMessage(
         EventId = 0,
         Level = LogLevel.Information,
-        Message = "Function {FunctionName} invoking.")]
+        Message = "Function {PluginName}-{FunctionName} invoking.")]
     public static partial void LogFunctionInvoking(
         this ILogger logger,
+        string? pluginName,
         string functionName);
 
     /// <summary>
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     /// Logs arguments to a <see cref="KernelFunction"/>.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     /// Logs arguments to a <see cref="KernelFunction"/>.
-=======
     /// Logs arguments of a <see cref="KernelFunction"/>.
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
     /// Logs arguments of a <see cref="KernelFunction"/>.
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
     /// Logs arguments of a <see cref="KernelFunction"/>.
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
     /// The action provides the benefit of caching the template parsing result for better performance.
     /// And the public method is a helper to serialize the arguments.
     /// </summary>
-    private static readonly Action<ILogger, string, Exception?> s_logFunctionArguments =
-        LoggerMessage.Define<string>(
+    private static readonly Action<ILogger, string?, string, string, Exception?> s_logFunctionArguments =
+        LoggerMessage.Define<string?, string, string>(
             logLevel: LogLevel.Trace,   // Sensitive data, logging as trace, disabled by default
             eventId: 0,
             "Function arguments: {Arguments}");
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     public static void LogFunctionArguments(this ILogger logger, KernelArguments arguments)
     {
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
     public static void LogFunctionArguments(this ILogger logger, KernelArguments arguments)
     {
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
     public static void LogFunctionArguments(this ILogger logger, KernelArguments arguments)
     {
-=======
->>>>>>> Stashed changes
-=======
     public static void LogFunctionArguments(this ILogger logger, KernelArguments arguments)
     {
-=======
->>>>>>> Stashed changes
->>>>>>> head
+            "Function {PluginName}-{FunctionName} arguments: {Arguments}");
 
     [RequiresUnreferencedCode("Uses reflection to serialize function arguments, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to serialize the function arguments, making it incompatible with AOT scenarios.")]
-    public static void LogFunctionArguments(this ILogger logger, KernelArguments arguments)
+    public static void LogFunctionArguments(this ILogger logger, string? pluginName, string functionName, KernelArguments arguments)
     {
-        LogFunctionArgumentsInternal(logger, arguments);
+        LogFunctionArgumentsInternal(logger, pluginName, functionName, arguments);
     }
 
     /// <summary>
@@ -229,9 +68,9 @@ internal static partial class KernelFunctionLogMessages
     /// </summary>
     [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "This method is AOT safe.")]
     [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "This method is AOT safe.")]
-    public static void LogFunctionArguments(this ILogger logger, KernelArguments arguments, JsonSerializerOptions jsonSerializerOptions)
+    public static void LogFunctionArguments(this ILogger logger, string? pluginName, string functionName, KernelArguments arguments, JsonSerializerOptions jsonSerializerOptions)
     {
-        LogFunctionArgumentsInternal(logger, arguments, jsonSerializerOptions);
+        LogFunctionArgumentsInternal(logger, pluginName, functionName, arguments, jsonSerializerOptions);
     }
 
     /// <summary>
@@ -239,86 +78,16 @@ internal static partial class KernelFunctionLogMessages
     /// </summary>
     [RequiresUnreferencedCode("Uses reflection, if no JOSs are supplied, to serialize function arguments, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection, if no JOSs are supplied, to serialize function arguments, making it incompatible with AOT scenarios.")]
-    private static void LogFunctionArgumentsInternal(this ILogger logger, KernelArguments arguments, JsonSerializerOptions? jsonSerializerOptions = null)
+    private static void LogFunctionArgumentsInternal(this ILogger logger, string? pluginName, string functionName, KernelArguments arguments, JsonSerializerOptions? jsonSerializerOptions = null)
     {
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
         if (logger.IsEnabled(LogLevel.Trace))
         {
             try
             {
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                 var jsonString = JsonSerializer.Serialize(arguments);
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
                 var jsonString = JsonSerializer.Serialize(arguments);
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
                 var jsonString = JsonSerializer.Serialize(arguments);
-=======
->>>>>>> Stashed changes
-=======
                 var jsonString = JsonSerializer.Serialize(arguments);
-=======
->>>>>>> Stashed changes
->>>>>>> head
                 string jsonString;
 
                 if (jsonSerializerOptions is not null)
@@ -331,45 +100,12 @@ internal static partial class KernelFunctionLogMessages
                     jsonString = JsonSerializer.Serialize(arguments);
                 }
 
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
                 s_logFunctionArguments(logger, jsonString, null);
+                s_logFunctionArguments(logger, pluginName, functionName, jsonString, null);
             }
             catch (NotSupportedException ex)
             {
-                s_logFunctionArguments(logger, "Failed to serialize arguments to Json", ex);
+                s_logFunctionArguments(logger, pluginName, functionName, "Failed to serialize arguments to Json", ex);
             }
         }
     }
@@ -380,72 +116,31 @@ internal static partial class KernelFunctionLogMessages
     [LoggerMessage(
         EventId = 0,
         Level = LogLevel.Information,
-        Message = "Function {FunctionName} succeeded.")]
-    public static partial void LogFunctionInvokedSuccess(this ILogger logger, string functionName);
+        Message = "Function {PluginName}-{FunctionName} succeeded.")]
+    public static partial void LogFunctionInvokedSuccess(this ILogger logger, string? pluginName, string functionName);
 
     /// <summary>
     /// Logs result of a <see cref="KernelFunction"/>.
     /// The action provides the benefit of caching the template parsing result for better performance.
     /// And the public method is a helper to serialize the result.
     /// </summary>
-    private static readonly Action<ILogger, string, Exception?> s_logFunctionResultValue =
-        LoggerMessage.Define<string>(
+    private static readonly Action<ILogger, string?, string, string, Exception?> s_logFunctionResultValue =
+        LoggerMessage.Define<string?, string, string>(
             logLevel: LogLevel.Trace,   // Sensitive data, logging as trace, disabled by default
             eventId: 0,
             "Function result: {ResultValue}");
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "By design. See comment below.")]
     public static void LogFunctionResultValue(this ILogger logger, FunctionResult? resultValue)
     {
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "By design. See comment below.")]
     public static void LogFunctionResultValue(this ILogger logger, FunctionResult? resultValue)
     {
-=======
-<<<<<<< div
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+            "Function {PluginName}-{FunctionName} result: {ResultValue}");
     [RequiresUnreferencedCode("Uses reflection to serialize function result, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to serialize the function result, making it incompatible with AOT scenarios.")]
-    public static void LogFunctionResultValue(this ILogger logger, FunctionResult? resultValue)
+    public static void LogFunctionResultValue(this ILogger logger, string? pluginName, string functionName, FunctionResult? resultValue)
     {
-        LogFunctionResultValueInternal(logger, resultValue);
+        LogFunctionResultValueInternal(logger, pluginName, functionName, resultValue);
     }
 
     /// <summary>
@@ -455,56 +150,22 @@ internal static partial class KernelFunctionLogMessages
     /// </summary>
     [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "This method is AOT safe.")]
     [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "This method is AOT safe.")]
-    public static void LogFunctionResultValue(this ILogger logger, FunctionResult? resultValue, JsonSerializerOptions jsonSerializerOptions)
+    public static void LogFunctionResultValue(this ILogger logger, string? pluginName, string functionName, FunctionResult? resultValue, JsonSerializerOptions jsonSerializerOptions)
     {
-        LogFunctionResultValueInternal(logger, resultValue, jsonSerializerOptions);
+        LogFunctionResultValueInternal(logger, pluginName, functionName, resultValue, jsonSerializerOptions);
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "By design. See comment below.")]
     [RequiresUnreferencedCode("Uses reflection, if no JOSs are supplied, to serialize function arguments, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection, if no JOSs are supplied, to serialize function arguments, making it incompatible with AOT scenarios.")]
-    private static void LogFunctionResultValueInternal(this ILogger logger, FunctionResult? resultValue, JsonSerializerOptions? jsonSerializerOptions = null)
+    private static void LogFunctionResultValueInternal(this ILogger logger, string? pluginName, string functionName, FunctionResult? resultValue, JsonSerializerOptions? jsonSerializerOptions = null)
     {
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
         if (logger.IsEnabled(LogLevel.Trace))
         {
             // Attempt to convert the result value to string using the GetValue heuristic
             try
             {
-                s_logFunctionResultValue(logger, resultValue?.GetValue<string>() ?? string.Empty, null);
+                s_logFunctionResultValue(logger, pluginName, functionName, resultValue?.GetValue<string>() ?? string.Empty, null);
                 return;
             }
             catch { }
@@ -512,46 +173,10 @@ internal static partial class KernelFunctionLogMessages
             // Falling back to Json serialization
             try
             {
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                 s_logFunctionResultValue(logger, JsonSerializer.Serialize(resultValue?.Value), null);
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
                 s_logFunctionResultValue(logger, JsonSerializer.Serialize(resultValue?.Value), null);
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
                 s_logFunctionResultValue(logger, JsonSerializer.Serialize(resultValue?.Value), null);
-=======
->>>>>>> Stashed changes
-=======
                 s_logFunctionResultValue(logger, JsonSerializer.Serialize(resultValue?.Value), null);
-=======
->>>>>>> Stashed changes
->>>>>>> head
                 string jsonString;
 
                 if (jsonSerializerOptions is not null)
@@ -565,44 +190,11 @@ internal static partial class KernelFunctionLogMessages
                 }
 
                 s_logFunctionResultValue(logger, jsonString, null);
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+                s_logFunctionResultValue(logger, pluginName, functionName, jsonString, null);
             }
             catch (NotSupportedException ex)
             {
-                s_logFunctionResultValue(logger, "Failed to log function result value", ex);
+                s_logFunctionResultValue(logger, pluginName, functionName, "Failed to log function result value", ex);
             }
         }
     }
@@ -613,9 +205,11 @@ internal static partial class KernelFunctionLogMessages
     [LoggerMessage(
         EventId = 0,
         Level = LogLevel.Error,
-        Message = "Function failed. Error: {Message}")]
+        Message = "Function {PluginName}-{FunctionName} failed. Error: {Message}")]
     public static partial void LogFunctionError(
         this ILogger logger,
+        string? pluginName,
+        string functionName,
         Exception exception,
         string message);
 
@@ -625,9 +219,11 @@ internal static partial class KernelFunctionLogMessages
     [LoggerMessage(
         EventId = 0,
         Level = LogLevel.Information,
-        Message = "Function completed. Duration: {Duration}s")]
+        Message = "Function {PluginName}-{FunctionName} completed. Duration: {Duration}s")]
     public static partial void LogFunctionComplete(
         this ILogger logger,
+        string? pluginName,
+        string functionName,
         double duration);
 
     /// <summary>
@@ -636,9 +232,10 @@ internal static partial class KernelFunctionLogMessages
     [LoggerMessage(
         EventId = 0,
         Level = LogLevel.Information,
-        Message = "Function {FunctionName} streaming.")]
+        Message = "Function {PluginName}-{FunctionName} streaming.")]
     public static partial void LogFunctionStreamingInvoking(
         this ILogger logger,
+        string? pluginName,
         string functionName);
 
     /// <summary>
@@ -647,8 +244,10 @@ internal static partial class KernelFunctionLogMessages
     [LoggerMessage(
         EventId = 0,
         Level = LogLevel.Information,
-        Message = "Function streaming completed. Duration: {Duration}s.")]
+        Message = "Function {PluginName}-{FunctionName} streaming completed. Duration: {Duration}s.")]
     public static partial void LogFunctionStreamingComplete(
         this ILogger logger,
+        string? pluginName,
+        string functionName,
         double duration);
 }

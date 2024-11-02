@@ -828,7 +828,7 @@ internal partial class ClientCore
             Seed = executionSettings.Seed,
             EndUserId = executionSettings.User,
             TopLogProbabilityCount = executionSettings.TopLogprobs,
-            IncludeLogProbabilities = executionSettings.Logprobs,
+            IncludeLogProbabilities = executionSettings.Logprobs
         };
 
         var responseFormat = GetResponseFormat(executionSettings);
@@ -877,6 +877,11 @@ internal partial class ClientCore
             {
                 options.StopSequences.Add(s);
             }
+        }
+
+        if (toolCallingConfig.Options?.AllowParallelCalls is not null)
+        {
+            options.AllowParallelToolCalls = toolCallingConfig.Options.AllowParallelCalls;
         }
 
         return options;
@@ -973,6 +978,28 @@ internal partial class ClientCore
 
         return ChatResponseFormat.CreateJsonSchemaFormat(type.Name, schemaBinaryData, jsonSchemaIsStrict: true);
         return ChatResponseFormat.CreateJsonSchemaFormat(type.Name, schemaBinaryData, jsonSchemaIsStrict: true);
+        var typeName = GetTypeName(type);
+
+        return ChatResponseFormat.CreateJsonSchemaFormat(typeName, schemaBinaryData, jsonSchemaIsStrict: true);
+    }
+
+    /// <summary>
+    /// Returns a type name concatenated with generic argument type names if they exist.
+    /// </summary>
+    private static string GetTypeName(Type type)
+    {
+        if (!type.IsGenericType)
+        {
+            return type.Name;
+        }
+
+        // If type is generic, base name is followed by ` character.
+        string baseName = type.Name.Substring(0, type.Name.IndexOf('`'));
+
+        Type[] typeArguments = type.GetGenericArguments();
+        string argumentNames = string.Concat(Array.ConvertAll(typeArguments, GetTypeName));
+
+        return $"{baseName}{argumentNames}";
     }
 
     /// <summary>Checks if a tool call is for a function that was defined.</summary>

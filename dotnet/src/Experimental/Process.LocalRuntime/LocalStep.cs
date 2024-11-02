@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel.Process;
+using Microsoft.SemanticKernel.Process.Internal;
+using Microsoft.SemanticKernel.Process.Runtime;
 
 namespace Microsoft.SemanticKernel;
 
@@ -136,7 +138,15 @@ internal class LocalStep : IKernelProcessMessageChannel
     /// </summary>
     /// <param name="processEvent">The event to emit.</param>
     /// <returns>A <see cref="ValueTask"/></returns>
-    public ValueTask EmitEventAsync(KernelProcessEvent processEvent)
+    public ValueTask EmitEventAsync(KernelProcessEvent processEvent) => this.EmitEventAsync(processEvent, isError: false);
+
+    /// <summary>
+    /// Emits an event from the step.
+    /// </summary>
+    /// <param name="processEvent">The event to emit.</param>
+    /// <param name="isError">Flag indicating if the event being emitted is in response to a step failure</param>
+    /// <returns>A <see cref="ValueTask"/></returns>
+    internal ValueTask EmitEventAsync(KernelProcessEvent processEvent, bool isError)
     {
         this.EmitEvent(LocalEvent.FromKernelProcessEvent(processEvent, this._eventNamespace));
         ProcessEvent emitEvent = ProcessEvent.FromKernelProcessEvent(processEvent, this._eventNamespace);
@@ -145,6 +155,7 @@ internal class LocalStep : IKernelProcessMessageChannel
             this.EmitEvent(emitEvent);
         }
 
+        this.EmitEvent(new ProcessEvent(this._eventNamespace, processEvent, isError));
         return default;
     }
 
@@ -181,7 +192,7 @@ internal class LocalStep : IKernelProcessMessageChannel
 
             if (!this._inputs.TryGetValue(message.FunctionName, out Dictionary<string, object?>? functionParameters))
             {
-                this._inputs[message.FunctionName] = new();
+                this._inputs[message.FunctionName] = [];
                 functionParameters = this._inputs[message.FunctionName];
             }
 
@@ -214,17 +225,17 @@ internal class LocalStep : IKernelProcessMessageChannel
             throw new ArgumentException($"Function {targetFunction} not found in plugin {this.Name}");
         }
 
-        FunctionResult? invokeResult = null;
-        string? eventName = null;
-        object? eventValue = null;
-
         // Invoke the function, catching all exceptions that it may throw, and then post the appropriate event.
 #pragma warning disable CA1031 // Do not catch general exception types
         try
         {
-            invokeResult = await this.InvokeFunction(function, this._kernel, arguments).ConfigureAwait(false);
-            eventName = $"{targetFunction}.OnResult";
-            eventValue = invokeResult?.GetValue<object>();
+            FunctionResult invokeResult = await this.InvokeFunction(function, this._kernel, arguments).ConfigureAwait(false);
+            await this.EmitEventAsync(
+                new KernelProcessEvent
+                {
+                    Id = $"{targetFunction}.OnResult",
+                    Data = invokeResult.GetValue<object>(),
+                }).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -232,11 +243,17 @@ internal class LocalStep : IKernelProcessMessageChannel
             this.Logger.LogError("Error in Step {StepName}: {ErrorMessage}", this.Name, ex.Message);
             eventName = $"{targetFunction}.OnError";
             eventValue = ex;
+            this._logger.LogError("Error in Step {StepName}: {ErrorMessage}", this.Name, ex.Message);
+            await this.EmitEventAsync(
+                new KernelProcessEvent
+                {
+                    Id = $"{targetFunction}.OnError",
+                    Data = KernelProcessError.FromException(ex),
+                },
+                isError: true).ConfigureAwait(false);
         }
         finally
         {
-            await this.EmitEventAsync(new KernelProcessEvent { Id = eventName, Data = eventValue }).ConfigureAwait(false);
-
             // Reset the inputs for the function that was just executed
             this._inputs[targetFunction] = new(this._initialInputs[targetFunction] ?? []);
         }
@@ -252,7 +269,7 @@ internal class LocalStep : IKernelProcessMessageChannel
     {
         // Instantiate an instance of the inner step object
         KernelProcessStep stepInstance = (KernelProcessStep)ActivatorUtilities.CreateInstance(this._kernel.Services, this._stepInfo.InnerStepType);
-        var kernelPlugin = KernelPluginFactory.CreateFromObject(stepInstance, pluginName: this._stepInfo.State.Name!);
+        var kernelPlugin = KernelPluginFactory.CreateFromObject(stepInstance, pluginName: this._stepInfo.State.Name);
 
         // Load the kernel functions
         foreach (KernelFunction f in kernelPlugin)
@@ -461,6 +478,6 @@ internal class LocalStep : IKernelProcessMessageChannel
         Verify.NotNull(processEvent);
         return LocalEvent.FromKernelProcessEvent(processEvent, $"{this.Name}_{this.Id}");
         Verify.NotNull(processEvent, nameof(processEvent));
-        return ProcessEvent.FromKernelProcessEvent(processEvent, $"{this.Name}_{this.Id}");
+        return new ProcessEvent($"{this.Name}_{this.Id}", processEvent);
     }
 }
