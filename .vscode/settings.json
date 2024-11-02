@@ -1,8 +1,6 @@
 {
   "prettier.enable": true,
-  "css.lint.validProperties": [
-    "composes"
-  ],
+  "css.lint.validProperties": ["composes"],
   "editor.formatOnType": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
@@ -15,13 +13,9 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
   "python.formatting.provider": "autopep8",
-  "python.formatting.autopep8Args": [
-    "--max-line-length=120"
-  ],
+  "python.formatting.autopep8Args": ["--max-line-length=120"],
   "notebook.output.textLineLimit": 500,
-  "python.analysis.extraPaths": [
-    "./python/src"
-  ],
+  "python.analysis.extraPaths": ["./python/src"],
   "javascript.updateImportsOnFileMove.enabled": "always",
   "search.exclude": {
     "**/node_modules": true,
@@ -71,20 +65,25 @@
     "**/Thumbs.db": true
   },
   "cSpell.words": [
+    "autogen",
+    "Partitioner"
+    "Dapr",
     "Partitioner",
+    "Pregel",
     "Prompty",
-    "SKEXP"
+    "SKEXP",
+    "superstep",
+    "Supersteps",
+    "typeref",
+    "uninstantiated"
   ],
   "[java]": {
     "editor.formatOnSave": false,
     "editor.tabSize": 4,
     "editor.codeActionsOnSave": {
       "source.fixAll": "never"
-<<<<<<< HEAD
     },
-=======
     }
->>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
   },
   "emeraldwalk.runonsave": {
     "commands": [
@@ -97,23 +96,20 @@
   "java.debug.settings.onBuildFailureProceed": true,
   "java.compile.nullAnalysis.mode": "disabled",
   "dotnet.defaultSolution": "dotnet\\SK-dotnet.sln",
-  "python.testing.pytestArgs": [
-    "python/tests"
-  ],
+  "python.testing.pytestArgs": ["python/tests"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
-<<<<<<< HEAD
   "azureFunctions.deploySubpath": "dotnet\\samples\\CreateChatGptPlugin\\MathPlugin\\azure-function/bin/Release/net6.0/publish",
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.preDeployTask": "publish (functions)"
-=======
   "azureFunctions.projectSubpath": "samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions",
   "azureFunctions.deploySubpath": "samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Release/net6.0/publish",
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
+  "azureFunctions.preDeployTask": "publish (functions)"
   "azureFunctions.preDeployTask": "publish (functions)",
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
@@ -172,5 +168,8 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false
->>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
+}
+  "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build"
+}
+  "python.testing.pytestEnabled": true
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -340,6 +340,18 @@ internal abstract class ClientCore
         CancellationToken cancellationToken)
     {
         Verify.NotNull(content.Data);
+        if (content.Data == null)
+        {
+<<<<<<< main
+            throw new ArgumentNullException(nameof(content.Data));
+        }
+        if (content.Data == null)
+        {
+            throw new ArgumentNullException(nameof(content.Data));
+=======
+            throw new ArgumentNullException(nameof(content.Data), "Content data cannot be null");
+>>>>>>> origin/PR
+        }
         var audioData = content.Data.Value;
         if (audioData.IsEmpty)
         {
@@ -764,6 +776,7 @@ internal abstract class ClientCore
 
             var chatMessageContent = this.GetChatMessage(streamedRole ?? default, content, toolCalls, functionCallContents, metadata, streamedName);
             chat.Add(chatMessageContent);
+            chat.Add(this.GetChatMessage(streamedRole ?? default, content, toolCalls, functionCallContents, metadata, streamedName));
 
             // Respond to each tooling request.
             for (int toolCallIndex = 0; toolCallIndex < toolCalls.Length; toolCallIndex++)

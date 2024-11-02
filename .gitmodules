@@ -1,5 +1,4 @@
-[submodule "Singularity"]
-[submodule "Bryan-Roe"]
 [submodule "semantic-kernel"]
-	path = semantic-kernel
-	url = git@github.com:Bryan-Roe/semantic-kernel.git
+[submodule "tree-sitter-python"]
+[submodule "compositional-generalization-span-level-attention"]
+[submodule "OpenKP"]

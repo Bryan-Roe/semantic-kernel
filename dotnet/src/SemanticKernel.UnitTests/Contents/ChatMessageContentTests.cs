@@ -202,7 +202,70 @@ public class ChatMessageContentTests
             new FunctionCallContent("function-name", "plugin-name", "function-id", new KernelArguments { ["parameter"] = "argument" }),
             new FunctionResultContent(new FunctionCallContent("function-name", "plugin-name", "function-id"), "function-result"),
             new FileReferenceContent(fileId: "file-id-1") { ModelId = "model-7", Metadata = new Dictionary<string, object?>() { ["metadata-key-7"] = "metadata-value-7" } },
-            new AnnotationContent() { ModelId = "model-8", FileId = "file-id-2", StartIndex = 2, EndIndex = 24, Quote = "quote-8", Metadata = new Dictionary<string, object?>() { ["metadata-key-8"] = "metadata-value-8" } }
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+            new AnnotationContent("quote-8") { ModelId = "model-8", FileId = "file-id-2", StartIndex = 2, EndIndex = 24, Metadata = new Dictionary<string, object?>() { ["metadata-key-8"] = "metadata-value-8" } }
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+            new AnnotationContent("quote-8") { ModelId = "model-8", FileId = "file-id-2", StartIndex = 2, EndIndex = 24, Metadata = new Dictionary<string, object?>() { ["metadata-key-8"] = "metadata-value-8" } }
+=======
+            new AnnotationContent("quote-8") { ModelId = "model-8", FileId = "file-id-2", StartIndex = 2, EndIndex = 24, Metadata = new Dictionary<string, object?>() { ["metadata-key-8"] = "metadata-value-8" } },
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            new AnnotationContent("quote-8") { ModelId = "model-8", FileId = "file-id-2", StartIndex = 2, EndIndex = 24, Metadata = new Dictionary<string, object?>() { ["metadata-key-8"] = "metadata-value-8" } },
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+            new AnnotationContent("quote-8") { ModelId = "model-8", FileId = "file-id-2", StartIndex = 2, EndIndex = 24, Metadata = new Dictionary<string, object?>() { ["metadata-key-8"] = "metadata-value-8" } },
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
         ];
 
         // Act
@@ -320,4 +383,162 @@ public class ChatMessageContentTests
         Assert.Single(annotationContent.Metadata);
         Assert.Equal("metadata-value-8", annotationContent.Metadata["metadata-key-8"]?.ToString());
     }
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+
+    [Fact]
+    public void ItCanBePolymorphicallySerializedAndDeserializedAsKernelContentType()
+    {
+        // Arrange
+        KernelContent sut = new ChatMessageContent(AuthorRole.User, "test-content", "test-model", metadata: new Dictionary<string, object?>()
+        {
+            ["test-metadata-key"] = "test-metadata-value"
+        })
+        {
+            MimeType = "test-mime-type"
+        };
+
+        // Act
+        var json = JsonSerializer.Serialize(sut);
+
+        var deserialized = JsonSerializer.Deserialize<KernelContent>(json)!;
+
+        // Assert
+        Assert.IsType<ChatMessageContent>(deserialized);
+        Assert.Equal("test-content", ((ChatMessageContent)deserialized).Content);
+        Assert.Equal("test-model", deserialized.ModelId);
+        Assert.Equal("test-mime-type", deserialized.MimeType);
+        Assert.NotNull(deserialized.Metadata);
+        Assert.Single(deserialized.Metadata);
+        Assert.Equal("test-metadata-value", deserialized.Metadata["test-metadata-key"]?.ToString());
+    }
+
+    [Fact]
+    public void UnknownDerivativeCanBePolymorphicallySerializedAndDeserializedAsChatMessageContentType()
+    {
+        // Arrange
+        KernelContent sut = new UnknownExternalChatMessageContent(AuthorRole.User, "test-content")
+        {
+            MimeType = "test-mime-type",
+        };
+
+        // Act
+        var json = JsonSerializer.Serialize(sut);
+
+        var deserialized = JsonSerializer.Deserialize<KernelContent>(json)!;
+
+        // Assert
+        Assert.IsType<ChatMessageContent>(deserialized);
+        Assert.Equal("test-content", ((ChatMessageContent)deserialized).Content);
+        Assert.Equal("test-mime-type", deserialized.MimeType);
+    }
+
+    [Fact]
+    public void ItCanBeSerializeAndDeserializedWithFunctionResultOfChatMessageType()
+    {
+        // Arrange
+        ChatMessageContentItemCollection items = [
+            new FunctionResultContent(new FunctionCallContent("function-name-1", "plugin-name-1", "function-id-1"), new ChatMessageContent(AuthorRole.User, "test-content-1")),
+            new FunctionResultContent(new FunctionCallContent("function-name-2", "plugin-name-2", "function-id-2"), new UnknownExternalChatMessageContent(AuthorRole.Assistant, "test-content-2")),
+        ];
+
+        // Act
+        var chatMessageJson = JsonSerializer.Serialize(new ChatMessageContent(AuthorRole.User, items: items, "message-model"));
+
+        var deserializedMessage = JsonSerializer.Deserialize<ChatMessageContent>(chatMessageJson)!;
+
+        // Assert
+        var functionResultContentWithResultOfChatMessageContentType = deserializedMessage.Items[0] as FunctionResultContent;
+        Assert.NotNull(functionResultContentWithResultOfChatMessageContentType);
+        Assert.Equal("function-name-1", functionResultContentWithResultOfChatMessageContentType.FunctionName);
+        Assert.Equal("function-id-1", functionResultContentWithResultOfChatMessageContentType.CallId);
+        Assert.Equal("plugin-name-1", functionResultContentWithResultOfChatMessageContentType.PluginName);
+        var chatMessageContent = Assert.IsType<JsonElement>(functionResultContentWithResultOfChatMessageContentType.Result);
+        Assert.Equal("user", chatMessageContent.GetProperty("Role").GetProperty("Label").GetString());
+        Assert.Equal("test-content-1", chatMessageContent.GetProperty("Items")[0].GetProperty("Text").GetString());
+
+        var functionResultContentWithResultOfUnknownChatMessageContentType = deserializedMessage.Items[1] as FunctionResultContent;
+        Assert.NotNull(functionResultContentWithResultOfUnknownChatMessageContentType);
+        Assert.Equal("function-name-2", functionResultContentWithResultOfUnknownChatMessageContentType.FunctionName);
+        Assert.Equal("function-id-2", functionResultContentWithResultOfUnknownChatMessageContentType.CallId);
+        Assert.Equal("plugin-name-2", functionResultContentWithResultOfUnknownChatMessageContentType.PluginName);
+        var unknownChatMessageContent = Assert.IsType<JsonElement>(functionResultContentWithResultOfUnknownChatMessageContentType.Result);
+        Assert.Equal("assistant", unknownChatMessageContent.GetProperty("Role").GetProperty("Label").GetString());
+        Assert.Equal("test-content-2", unknownChatMessageContent.GetProperty("Items")[0].GetProperty("Text").GetString());
+    }
+
+    private sealed class UnknownExternalChatMessageContent : ChatMessageContent
+    {
+        public UnknownExternalChatMessageContent(AuthorRole role, string? content) : base(role, content)
+        {
+        }
+    }
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
 }

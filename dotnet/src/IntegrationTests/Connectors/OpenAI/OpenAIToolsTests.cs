@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -584,7 +584,117 @@ public sealed class OpenAIToolsTests : BaseIntegrationTest
         Assert.NotNull(getWeatherForCityFunctionCallResult.Result);
     }
 
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+    [Fact(Skip = "The test is temporarily disabled until a more stable solution is found. See issue #12345 for details.")]
+=======
+    // TODO: Investigate the root cause of the instability and implement a stable solution.
+    // Re-enable this test once the issue is resolved.
     [Fact(Skip = "The test is temporarily disabled until a more stable solution is found.")]
+>>>>>>> origin/PR
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+    [Fact(Skip = "The test is temporarily disabled until a more stable solution is found. See issue #12345 for details.")]
+    // TODO: Investigate the root cause of the instability and implement a stable solution.
+    // Re-enable this test once the issue is resolved.
+    [Fact(Skip = "The test is temporarily disabled until a more stable solution is found.")]
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+    [Fact(Skip = "The test is temporarily disabled until a more stable solution is found. See issue #12345 for details.")]
+    // TODO: Investigate the root cause of the instability and implement a stable solution.
+    // Re-enable this test once the issue is resolved.
+    [Fact(Skip = "The test is temporarily disabled until a more stable solution is found.")]
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+    [Fact(Skip = "The test is temporarily disabled until a more stable solution is found. See issue #12345 for details.")]
+    // TODO: Investigate the root cause of the instability and implement a stable solution.
+    // Re-enable this test once the issue is resolved.
+    [Fact(Skip = "The test is temporarily disabled until a more stable solution is found.")]
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
     public async Task ConnectorAgnosticFunctionCallingModelClassesCanPassFunctionExceptionToConnectorForStreamingAsync()
     {
         // Arrange

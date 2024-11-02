@@ -2,7 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-<<<<<<< HEAD
       "name": ".NET Core Launch (dotnet-kernel-syntax-examples)",
       "type": "coreclr",
       "request": "launch",
@@ -10,15 +9,20 @@
       "program": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples/bin/Debug/net6.0/KernelSyntaxExamples.dll",
       "args": [],
       "cwd": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples",
-=======
       "name": "C#: Concept Samples",
+      "name": "Attach to .NET Functions",
       "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:azureFunctions.pickProcess}"
       "request": "launch",
       "preLaunchTask": "build (Concepts)",
+      // If you have changed target frameworks, make sure to update the program path.
       "program": "${workspaceFolder}/dotnet/samples/Concepts/bin/Debug/net6.0/Concepts.dll",
-      "args": [],
+      "args": [
+        /*"example0"*/
+      ],
       "cwd": "${workspaceFolder}/dotnet/samples/Concepts",
->>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
+      // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false
     },
@@ -33,13 +37,9 @@
       "type": "python",
       "request": "launch",
       "module": "pytest",
-      "args": [
-        "${file}"
-      ]
+      "args": ["${file}"]
     },
     {
-<<<<<<< HEAD
-=======
       "name": "C#: HuggingFaceImageToText Demo",
       "type": "dotnet",
       "request": "launch",
@@ -54,11 +54,16 @@
       "launchConfigurationId": "TargetFramework=;GettingStarted"
     },
     {
->>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
       "name": "Attach to .NET Functions",
+      "name": "C#: Process with Dapr",
       "type": "coreclr",
-      "request": "attach",
-      "processId": "${command:azureFunctions.pickProcess}"
+      "request": "launch",
+      "program": "${workspaceFolder}\\dotnet\\samples\\Demos\\ProcessWithDapr\\bin\\Debug\\net8.0\\ProcessWithDapr.dll",
+      "preLaunchTask": "daprd-debug",
+      "postDebugTask": "dapr-down",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT" : "Development"
+      }
     }
   ]
 }

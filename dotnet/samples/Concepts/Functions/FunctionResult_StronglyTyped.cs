@@ -1,9 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Diagnostics;
 using System.Text.Json;
-using Azure.AI.OpenAI;
 using Microsoft.SemanticKernel;
+using OpenAI.Chat;
 
 namespace Functions;
 
@@ -79,12 +79,27 @@ public class FunctionResult_StronglyTyped(ITestOutputHelper output) : BaseTest(o
 
         private TokenCounts? ParseTokenCounts()
         {
-            CompletionsUsage? usage = FunctionResult.Metadata?["Usage"] as CompletionsUsage;
+            var usage = FunctionResult.Metadata?["Usage"] as ChatTokenUsage;
 
             return new TokenCounts(
-                completionTokens: usage?.CompletionTokens ?? 0,
-                promptTokens: usage?.PromptTokens ?? 0,
+                completionTokens: usage?.OutputTokens ?? 0,
+                promptTokens: usage?.InputTokens ?? 0,
                 totalTokens: usage?.TotalTokens ?? 0);
+                completionTokens: usage?.OutputTokens ?? 0,
+                promptTokens: usage?.InputTokens ?? 0,
+                totalTokens: usage?.TotalTokens ?? 0);
+                completionTokens: usage?.OutputTokenCount ?? 0,
+                promptTokens: usage?.InputTokenCount ?? 0,
+                totalTokens: usage?.TotalTokenCount ?? 0);
+                completionTokens: usage?.OutputTokenCount ?? 0,
+                promptTokens: usage?.InputTokenCount ?? 0,
+                totalTokens: usage?.TotalTokenCount ?? 0);
+                completionTokens: usage?.OutputTokenCount ?? 0,
+                promptTokens: usage?.InputTokenCount ?? 0,
+                totalTokens: usage?.TotalTokenCount ?? 0);
+                completionTokens: usage?.OutputTokenCount ?? 0,
+                promptTokens: usage?.InputTokenCount ?? 0,
+                totalTokens: usage?.TotalTokenCount ?? 0);
         }
 
         private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()

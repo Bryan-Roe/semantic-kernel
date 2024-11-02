@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.SemanticKernel;
 using System;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Microsoft.SemanticKernel;
 using Xunit;
 
 namespace SemanticKernel.IntegrationTests.CrossLanguage;
@@ -37,7 +37,10 @@ public class PromptWithHelperFunctionsTest
         JsonNode? obtainedObject = JsonNode.Parse(requestContent);
         Assert.NotNull(obtainedObject);
 
-        string expected = await File.ReadAllTextAsync("./CrossLanguage/Data/PromptWithHelperFunctionsTest.json");
+        string expected = await File.ReadAllTextAsync(isStreaming
+            ? "./CrossLanguage/Data/PromptWithHelperFunctionsStreamingTest.json"
+            : "./CrossLanguage/Data/PromptWithHelperFunctionsTest.json");
+
         JsonNode? expectedObject = JsonNode.Parse(expected);
         Assert.NotNull(expectedObject);
 

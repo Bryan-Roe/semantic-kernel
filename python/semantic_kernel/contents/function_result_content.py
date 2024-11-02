@@ -5,7 +5,13 @@ from xml.etree.ElementTree import Element  # nosec
 
 from pydantic import Field, field_serializer
 from typing_extensions import deprecated
+from functools import cached_property
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, TypeVar
+from xml.etree.ElementTree import Element  # nosec
 
+from pydantic import Field
+
+from semantic_kernel.const import DEFAULT_FULLY_QUALIFIED_NAME_SEPARATOR
 from semantic_kernel.contents.const import FUNCTION_RESULT_CONTENT_TAG, TEXT_CONTENT_TAG, ContentTypes
 from semantic_kernel.contents.image_content import ImageContent
 from semantic_kernel.contents.kernel_content import KernelContent
@@ -25,16 +31,26 @@ TAG_CONTENT_MAP = {
 _T = TypeVar("_T", bound="FunctionResultContent")
 
 
+
+
+
 class FunctionResultContent(KernelContent):
     """This class represents function result content."""
 
-    content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(FUNCTION_RESULT_CONTENT_TAG, init=False)  # type: ignore
+from pydantic import Field, validator
+
+@validator('content_type', pre=True, always=True)
+def set_content_type(cls, v):
+    return FUNCTION_RESULT_CONTENT_TAG
+
+content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
     tag: ClassVar[str] = FUNCTION_RESULT_CONTENT_TAG
     id: str
     result: Any
     name: str | None = None
     function_name: str
     plugin_name: str | None = None
+    result: Any
     encoding: str | None = None
 
     def __init__(
@@ -70,10 +86,10 @@ class FunctionResultContent(KernelContent):
             kwargs (Any): Additional arguments.
         """
         if function_name and plugin_name and not name:
-            name = f"{plugin_name}-{function_name}"
+            name = f"{plugin_name}{DEFAULT_FULLY_QUALIFIED_NAME_SEPARATOR}{function_name}"
         if name and not function_name and not plugin_name:
-            if "-" in name:
-                plugin_name, function_name = name.split("-", maxsplit=1)
+            if DEFAULT_FULLY_QUALIFIED_NAME_SEPARATOR in name:
+                plugin_name, function_name = name.split(DEFAULT_FULLY_QUALIFIED_NAME_SEPARATOR, maxsplit=1)
             else:
                 function_name = name
         args = {
@@ -94,7 +110,7 @@ class FunctionResultContent(KernelContent):
 
     def __str__(self) -> str:
         """Return the text of the response."""
-        return self.result
+        return str(self.result)
 
     def to_element(self) -> Element:
         """Convert the instance to an Element."""
@@ -110,6 +126,7 @@ class FunctionResultContent(KernelContent):
         """Create an instance from an Element."""
         if element.tag != cls.tag:
             raise ContentInitializationError(f"Element tag is not {cls.tag}")  # pragma: no cover
+            raise ContentInitializationError(f"Element tag is not {cls.tag}")
         return cls(id=element.get("id", ""), result=element.text, name=element.get("name", None))
 
     @classmethod
@@ -125,6 +142,8 @@ class FunctionResultContent(KernelContent):
 
         metadata.update(function_call_content.metadata or {})
         metadata.update(getattr(result, "metadata", {}))
+        if function_call_content.metadata:
+            metadata.update(function_call_content.metadata)
         inner_content = result
         if isinstance(result, FunctionResult):
             result = result.value
@@ -146,6 +165,7 @@ class FunctionResultContent(KernelContent):
             result=res,
             function_name=function_call_content.function_name,
             plugin_name=function_call_content.plugin_name,
+            name=function_call_content.name,
             ai_model_id=function_call_content.ai_model_id,
             metadata=metadata,
         )
@@ -168,7 +188,22 @@ class FunctionResultContent(KernelContent):
         """Split the name into a plugin and function name."""
         return [self.plugin_name or "", self.function_name]
 
+    def custom_fully_qualified_name(self, separator: str) -> str:
+        """Get the fully qualified name of the function with a custom separator.
+
+        Args:
+            separator (str): The custom separator.
+
+        Returns:
+            The fully qualified name of the function with a custom separator.
+        """
+        return f"{self.plugin_name}{separator}{self.function_name}" if self.plugin_name else self.function_name
+
     @field_serializer("result")
     def serialize_result(self, value: Any) -> str:
         """Serialize the result."""
         return str(value)
+
+    def __hash__(self) -> int:
+        """Return the hash of the function result content."""
+        return hash((self.tag, self.id, self.result, self.name, self.function_name, self.plugin_name, self.encoding))

@@ -35,8 +35,12 @@ chat_function = kernel.add_function(
 
 chat_history = ChatHistory(system_message=system_message)
 chat_history.add_user_message("Hi there, who are you?")
-chat_history.add_assistant_message("I am Mosscap, a chat bot. I'm trying to figure out what people need")
-chat_history.add_user_message("I want to find a hotel in Seattle with free wifi and a pool.")
+chat_history.add_assistant_message(
+    "I am Mosscap, a chat bot. I'm trying to figure out what people need"
+)
+chat_history.add_user_message(
+    "I want to find a hotel in Seattle with free wifi and a pool."
+)
 
 
 async def chat() -> bool:
@@ -55,22 +59,25 @@ async def chat() -> bool:
 
     stream = True
     if stream:
-        answer = kernel.invoke_stream(
+        chunks = kernel.invoke_stream(
             chat_function,
             user_input=user_input,
             chat_history=chat_history,
         )
         print("Mosscap:> ", end="")
-        async for message in answer:
+        answer = ""
+        async for message in chunks:
             print(str(message[0]), end="")
+            answer += str(message[0])
         print("\n")
-        return True
-    answer = await kernel.invoke(
-        chat_function,
-        user_input=user_input,
-        chat_history=chat_history,
-    )
-    print(f"Mosscap:> {answer}")
+    else:
+        answer = await kernel.invoke(
+            chat_function,
+            user_input=user_input,
+            chat_history=chat_history,
+        )
+        print(f"Mosscap:> {answer}")
+
     chat_history.add_user_message(user_input)
     chat_history.add_assistant_message(str(answer))
     return True

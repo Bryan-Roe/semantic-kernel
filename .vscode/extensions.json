@@ -1,9 +1,6 @@
 {
   "recommendations": [
     "ms-azuretools.vscode-azurefunctions",
-<<<<<<< HEAD
-    "ms-dotnettools.csharp"
-=======
     "ms-dotnettools.csharp",
     "vscjava.vscode-gradle",
     "github.copilot-chat",
@@ -11,6 +8,12 @@
     "franneck94.c-cpp-runner",
     "ms-azuretools.vscode-azureresourcegroups",
     "github.vscode-github-actions"
->>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
+    "ms-dotnettools.dotnet-interactive-vscode",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-semantic-kernel.semantic-kernel",
+    "emeraldwalk.RunOnSave",
+    "ms-java.vscode-java-pack",
+    "ms-azuretools.vscode-dapr"
   ]
 }

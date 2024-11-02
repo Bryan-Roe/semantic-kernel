@@ -10,19 +10,26 @@ from semantic_kernel.exceptions import ServiceContentFilterException
 
 
 class ContentFilterResultSeverity(Enum):
+    """The severity of the content filter result."""
+
     HIGH = "high"
     MEDIUM = "medium"
     SAFE = "safe"
+    LOW = "low"
 
 
 @dataclass
 class ContentFilterResult:
+    """The result of a content filter check."""
+
     filtered: bool = False
     detected: bool = False
     severity: ContentFilterResultSeverity = ContentFilterResultSeverity.SAFE
 
     @classmethod
-    def from_inner_error_result(cls, inner_error_results: dict[str, Any]) -> "ContentFilterResult":
+    def from_inner_error_result(
+        cls, inner_error_results: dict[str, Any]
+    ) -> "ContentFilterResult":
         """Creates a ContentFilterResult from the inner error results.
 
         Args:
@@ -36,12 +43,16 @@ class ContentFilterResult:
             filtered=inner_error_results.get("filtered", False),
             detected=inner_error_results.get("detected", False),
             severity=ContentFilterResultSeverity(
-                inner_error_results.get("severity", ContentFilterResultSeverity.SAFE.value)
+                inner_error_results.get(
+                    "severity", ContentFilterResultSeverity.SAFE.value
+                )
             ),
         )
 
 
 class ContentFilterCodes(Enum):
+    """Content filter codes."""
+
     RESPONSIBLE_AI_POLICY_VIOLATION = "ResponsibleAIPolicyViolation"
 
 
@@ -75,7 +86,9 @@ class ContentFilterAIException(ServiceContentFilterException):
         if inner_exception.body is not None and isinstance(inner_exception.body, dict):
             inner_error = inner_exception.body.get("innererror", {})
             self.content_filter_code = ContentFilterCodes(
-                inner_error.get("code", ContentFilterCodes.RESPONSIBLE_AI_POLICY_VIOLATION.value)
+                inner_error.get(
+                    "code", ContentFilterCodes.RESPONSIBLE_AI_POLICY_VIOLATION.value
+                )
             )
             self.content_filter_result = {
                 key: ContentFilterResult.from_inner_error_result(values)

@@ -1,5 +1,11 @@
 # Contributing to Semantic Kernel
 
+> ℹ️ **NOTE**: The Python SDK for Semantic Kernel is currently in preview. While most
+> of the features available in the C# SDK have been ported, there may be bugs and
+> we're working on some features still - these will come into the repo soon. We are
+> also actively working on improving the code quality and developer experience,
+> and we appreciate your support, input and PRs!
+
 You can contribute to Semantic Kernel with issues and pull requests (PRs). Simply
 filing issues for problems you encounter is a great way to contribute. Contributing
 code is greatly appreciated.
@@ -68,7 +74,7 @@ DON'Ts:
   there's a problem with them, file an issue and we'll be happy to discuss it.
 - **DON'T** make new APIs without filing an issue and discussing with us first.
 
-### Breaking Changes
+## Breaking Changes
 
 Contributions must maintain API signature and behavioral compatibility. Contributions
 that include breaking changes will be rejected. Please file an issue to discuss
@@ -137,11 +143,41 @@ as separate plugins. Memory connectors play a crucial role in interfacing with
 external memory systems, and treating them as plugins enhances modularity and
 maintainability.
 
-### PR - CI Process
+### Examples and Use Cases
 
-The continuous integration (CI) system will automatically perform the required
-builds and run tests (including the ones you are expected to run) for PRs. Builds
-and test runs must be clean.
+To help contributors understand how to use the repository effectively, we have included some examples and use cases below:
 
-If the CI build fails for any reason, the PR issue will be updated with a link
-that can be used to determine the cause of the failure.
+#### Example 1: Adding a New Feature
+
+1. Identify the feature you want to add and create an issue to discuss it with the community.
+2. Fork the repository and create a new branch for your feature.
+3. Implement the feature in your branch, following the coding standards and guidelines.
+4. Add tests to verify the new feature works as expected.
+5. Run the development scripts to ensure your changes do not break the build or existing tests.
+6. Create a pull request with a description of the feature and link to the issue.
+7. Address any feedback from maintainers and community members.
+8. Once approved, your feature will be merged into the main branch.
+
+#### Example 2: Fixing a Bug
+
+1. Identify the bug and create an issue to discuss it with the community.
+2. Fork the repository and create a new branch for your bug fix.
+3. Write a test that reproduces the bug.
+4. Implement the fix in your branch.
+5. Run the development scripts to ensure your changes do not break the build or existing tests.
+6. Create a pull request with a description of the bug and the fix, and link to the issue.
+7. Address any feedback from maintainers and community members.
+8. Once approved, your bug fix will be merged into the main branch.
+
+#### Example 3: Improving Documentation
+
+1. Identify the documentation that needs improvement and create an issue to discuss it with the community.
+2. Fork the repository and create a new branch for your documentation improvements.
+3. Make the necessary changes to the documentation in your branch.
+4. Run the development scripts to ensure your changes do not break the build or existing tests.
+5. Create a pull request with a description of the documentation improvements and link to the issue.
+6. Address any feedback from maintainers and community members.
+7. Once approved, your documentation improvements will be merged into the main branch.
+
+By following these examples and use cases, you can effectively contribute to the Semantic Kernel repository and help improve the project for everyone.
+
