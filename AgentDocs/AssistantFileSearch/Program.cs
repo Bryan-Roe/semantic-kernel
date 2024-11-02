@@ -10,6 +10,7 @@ using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Files;
 using OpenAI.VectorStores;
+using Microsoft.SemanticKernel.Agents;
 
 namespace AgentsSample;
 

@@ -11,6 +11,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Files;
+using Microsoft.SemanticKernel.Agents;
 
 namespace AgentsSample;
 
@@ -59,6 +60,8 @@ public static class Program
                         """,
                     EnableCodeInterpreter = true,
                     CodeInterpreterFileIds = [fileDataCountryList.Id, fileDataCountryDetail.Id],
+                    EnableFileSearch = true,
+                    VectorStoreId = "your-vector-store-id"
                 },
                 new Kernel());
 
