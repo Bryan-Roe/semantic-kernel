@@ -336,12 +336,12 @@
       }
     },
     {
-      "label": "build (KernelSyntaxExamples)",
+      "label": "build (Concepts)",
       "command": "dotnet",
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples/KernelSyntaxExamples.csproj",
+        "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary",
         "/property:DebugType=portable"
@@ -350,26 +350,26 @@
       "group": "build"
     },
     {
-      "label": "watch (KernelSyntaxExamples)",
+      "label": "watch (Concepts)",
       "command": "dotnet",
       "type": "process",
       "args": [
         "watch",
         "run",
         "--project",
-        "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples/KernelSyntaxExamples.csproj"
+        "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj"
       ],
       "problemMatcher": "$msCompile",
       "group": "build"
     },
     {
-      "label": "run (KernelSyntaxExamples)",
+      "label": "run (Concepts)",
       "command": "dotnet",
       "type": "process",
       "args": [
         "run",
         "--project",
-        "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples/KernelSyntaxExamples.csproj",
+        "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj",
         "${input:filter}"
       ],
       "problemMatcher": "$msCompile",
@@ -391,7 +391,11 @@
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
+<<<<<<< HEAD
         "cwd": "${workspaceFolder}/dotnet\\samples\\CreateChatGptPlugin\\MathPlugin\\azure-function"
+=======
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+>>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
       }
     },
     {
@@ -410,7 +414,11 @@
       },
       "problemMatcher": "$msCompile",
       "options": {
+<<<<<<< HEAD
         "cwd": "${workspaceFolder}/dotnet\\samples\\CreateChatGptPlugin\\MathPlugin\\azure-function"
+=======
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+>>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
       }
     },
     {
@@ -426,7 +434,11 @@
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
+<<<<<<< HEAD
         "cwd": "${workspaceFolder}/dotnet\\samples\\CreateChatGptPlugin\\MathPlugin\\azure-function"
+=======
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+>>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
       }
     },
     {
@@ -443,14 +455,22 @@
       "dependsOn": "clean release (functions)",
       "problemMatcher": "$msCompile",
       "options": {
+<<<<<<< HEAD
         "cwd": "${workspaceFolder}/dotnet\\samples\\CreateChatGptPlugin\\MathPlugin\\azure-function"
+=======
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+>>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
       }
     },
     {
       "type": "func",
       "dependsOn": "build (functions)",
       "options": {
+<<<<<<< HEAD
         "cwd": "${workspaceFolder}/dotnet\\samples\\CreateChatGptPlugin\\MathPlugin\\azure-function/bin/Debug/net6.0"
+=======
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Debug/net6.0"
+>>>>>>> e8517fbc0a2276e8be47183ab3f74f55ae5fe195
       },
       "command": "host start",
       "isBackground": true,
