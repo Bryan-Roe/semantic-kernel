@@ -78,8 +78,14 @@ public record KernelProcessStepInfo
         Verify.NotNull(state);
 
         this.InnerStepType = innerStepType;
+<<<<<<< main
         this._outputEdges = edges;
         this.State = state;
+        this.Edges = edges.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyCollection<KernelProcessEdge>)kvp.Value.AsReadOnly());
+=======
+        this._outputEdges = edges;
+        this.State = state;
+>>>>>>> origin/main
         this._state = state;
 
         // Register the state as a know type for the DataContractSerialization used by Dapr.
