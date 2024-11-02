@@ -30,7 +30,6 @@ public class PineconeVectorStoreFixture : IAsyncLifetime
     public PineconeVectorStoreRecordCollection<PineconeAllTypes> AllTypesRecordCollection { get; set; } = null!;
     public PineconeVectorStoreRecordCollection<PineconeHotel> HotelRecordCollectionWithCustomNamespace { get; set; } = null!;
     public IVectorStoreRecordCollection<string, PineconeHotel> HotelRecordCollectionFromVectorStore { get; set; } = null!;
-    public IVectorStoreRecordCollection<string, VectorStoreGenericDataModel<string>> HotelRecordCollectionWithGenericDataModel { get; set; } = null!;
 
     public virtual Sdk.Index<GrpcTransport> Index { get; set; } = null!;
 
@@ -109,10 +108,6 @@ public class PineconeVectorStoreFixture : IAsyncLifetime
             });
 
         this.HotelRecordCollectionFromVectorStore = this.VectorStore.GetCollection<string, PineconeHotel>(
-            this.IndexName,
-            hotelRecordDefinition);
-
-        this.HotelRecordCollectionWithGenericDataModel = this.VectorStore.GetCollection<string, VectorStoreGenericDataModel<string>>(
             this.IndexName,
             hotelRecordDefinition);
 

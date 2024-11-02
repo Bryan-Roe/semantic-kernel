@@ -183,12 +183,7 @@ concepts = [
     param(load_yaml_prompt, [], id="load_yaml_prompt"),
     param(template_language, [], id="template_language"),
     param(rag_with_text_memory_plugin, [], id="rag_with_text_memory_plugin"),
-    param(
-        bing_search_plugin,
-        [],
-        id="bing_search_plugin",
-        marks=pytest.mark.skip(reason="Flaky test due to Azure OpenAI content policy"),
-    ),
+    param(bing_search_plugin, [], id="bing_search_plugin"),
     param(azure_chat_image_input, [], id="azure_chat_image_input"),
     param(custom_service_selector, [], id="custom_service_selector"),
     param(

@@ -52,7 +52,6 @@ from openai.types.beta.threads.file_path_delta_annotation import FilePathDeltaAn
 from openai.types.beta.threads.image_file_content_block import ImageFileContentBlock
 from openai.types.beta.threads.image_file_delta_block import ImageFileDeltaBlock
 from openai.types.beta.threads.message_delta_event import MessageDeltaEvent
-from openai.types.beta.threads.runs import CodeInterpreterLogs
 from openai.types.beta.threads.runs.code_interpreter_tool_call import CodeInterpreter
 from openai.types.beta.threads.text_content_block import TextContentBlock
 from openai.types.beta.threads.text_delta_block import TextDeltaBlock
@@ -994,45 +993,7 @@ def generate_code_interpreter_content(agent_name: str, code: str) -> "ChatMessag
 >>>>>>> Stashed changes
 >>>>>>> head
 @experimental_function
-def generate_streaming_function_content(
-    agent_name: str, step_details: "ToolCallsStepDetails"
-) -> "StreamingChatMessageContent":
-    """Generate streaming function content.
-
-    Args:
-        agent_name: The agent name.
-        step_details: The function step.
-
-    Returns:
-        StreamingChatMessageContent: The chat message content.
-    """
-    items: list[FunctionCallContent] = []
-
-    for tool in step_details.tool_calls:
-        if tool.type == "function":
-            items.append(
-                FunctionCallContent(
-                    id=tool.id,
-                    index=getattr(tool, "index", None),
-                    name=tool.function.name,
-                    arguments=tool.function.arguments,
-                )
-            )
-
-    return (
-        StreamingChatMessageContent(
-            role=AuthorRole.ASSISTANT,
-            name=agent_name,
-            items=items,  # type: ignore
-            choice_index=0,
-        )
-        if len(items) > 0
-        else None
-    )
-
-
-@experimental_function
-def generate_streaming_code_interpreter_content(
+def generate_streaming_tools_content(
     agent_name: str, step_details: "ToolCallsStepDetails"
 ) -> "StreamingChatMessageContent | None":
     """Generate code interpreter content.
@@ -1048,34 +1009,29 @@ def generate_streaming_code_interpreter_content(
 
     metadata: dict[str, bool] = {}
     for index, tool in enumerate(step_details.tool_calls):
-        if tool.type == "code_interpreter":
-            if tool.code_interpreter.input:
-                items.append(
-                    StreamingTextContent(
-                        choice_index=index,
-                        text=tool.code_interpreter.input,
-                    )
+        if tool.type != "code_interpreter":
+            continue
+        if tool.code_interpreter.input:
+            items.append(
+                StreamingTextContent(
+                    choice_index=index,
+                    text=tool.code_interpreter.input,
                 )
-                metadata["code"] = True
-            if tool.code_interpreter.outputs:
-                for output in tool.code_interpreter.outputs:
-                    if isinstance(output, CodeInterpreter) and output.image.file_id:
-                        items.append(
-                            StreamingFileReferenceContent(
-                                file_id=output.image.file_id,
-                            )
+            )
+            metadata["code"] = True
+        if len(tool.code_interpreter.outputs) > 0:
+            for output in tool.code_interpreter.outputs:
+                assert isinstance(output, CodeInterpreter)  # nosec
+                if output.image.file_id:
+                    items.append(
+                        StreamingFileReferenceContent(
+                            file_id=output.image.file_id,
                         )
-                    if isinstance(output, CodeInterpreterLogs) and output.logs:
-                        items.append(
-                            StreamingTextContent(
-                                choice_index=index,
-                                text=output.logs,
-                            )
-                        )
+                    )
 
     return (
         StreamingChatMessageContent(
-            role=AuthorRole.ASSISTANT,
+            role=AuthorRole.TOOL,
             name=agent_name,
             items=items,  # type: ignore
             choice_index=0,

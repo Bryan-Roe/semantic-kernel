@@ -25,10 +25,18 @@ class RunPollingOptions(KernelBaseModel):
     message_synchronization_delay: timedelta = Field(
         default=timedelta(milliseconds=250)
     )
-=======
     message_synchronization_delay: timedelta = Field(default=timedelta(milliseconds=250))
     run_polling_timeout: timedelta = Field(default=timedelta(minutes=1))  # New timeout attribute
->>>>>>> upstream/main
+=======
+    message_synchronization_delay: timedelta = Field(
+        default=timedelta(milliseconds=250)
+    )
+    message_synchronization_delay: timedelta = Field(
+        default=timedelta(milliseconds=250)
+    )
+    message_synchronization_delay: timedelta = Field(default=timedelta(milliseconds=250))
+    run_polling_timeout: timedelta = Field(default=timedelta(minutes=1))  # New timeout attribute
+>>>>>>> origin/main
 
     def get_polling_interval(self, iteration_count: int) -> timedelta:
         """Get the polling interval for the given iteration count."""

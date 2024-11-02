@@ -428,7 +428,7 @@ class HuggingFaceTextEmbedding(EmbeddingGeneratorBase):
 >>>>>>> head
         super().__init__(
             ai_model_id=ai_model_id,
-            service_id=service_id or ai_model_id,
+            service_id=service_id,
             device=resolved_device,
             generator=sentence_transformers.SentenceTransformer(
                 model_name_or_path=ai_model_id, device=resolved_device

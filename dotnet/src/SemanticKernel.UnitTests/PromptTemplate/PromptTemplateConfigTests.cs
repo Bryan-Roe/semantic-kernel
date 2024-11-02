@@ -389,10 +389,7 @@ public class PromptTemplateConfigTests
                   "model_id": "gpt-4",
                   "function_choice_behavior": {
                     "type": "auto",
-                    "functions":["p1.f1"],
-                    "options":{
-                        "allow_concurrent_invocation": true
-                    }
+                    "functions":["p1.f1"]
                   }
                 }
               }
@@ -413,8 +410,6 @@ public class PromptTemplateConfigTests
 
         Assert.NotNull(autoFunctionCallChoice.Functions);
         Assert.Equal("p1.f1", autoFunctionCallChoice.Functions.Single());
-
-        Assert.True(autoFunctionCallChoice.Options!.AllowConcurrentInvocation);
     }
 
     [Fact]
@@ -429,10 +424,7 @@ public class PromptTemplateConfigTests
                   "model_id": "gpt-4",
                   "function_choice_behavior": {
                     "type": "required",
-                    "functions":["p1.f1"],
-                    "options":{
-                        "allow_concurrent_invocation": true
-                    }
+                    "functions":["p1.f1"]
                   }
                 }
               }
@@ -454,8 +446,6 @@ public class PromptTemplateConfigTests
 
         Assert.NotNull(requiredFunctionCallChoice.Functions);
         Assert.Equal("p1.f1", requiredFunctionCallChoice.Functions.Single());
-
-        Assert.True(requiredFunctionCallChoice.Options!.AllowConcurrentInvocation);
     }
 
     [Fact]

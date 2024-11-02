@@ -162,7 +162,7 @@ public sealed class OpenAITextToImageTests
         Assert.NotEmpty(result);
     }
 
-    [Fact(Skip = "Failing in integration tests pipeline with - HTTP 400 (invalid_request_error: billing_hard_limit_reached) error.")]
+    [Fact]
     public async Task OpenAITextToImageUseDallE2ByDefaultAsync()
     {
         // Arrange
@@ -281,7 +281,7 @@ public sealed class OpenAITextToImageTests
 >>>>>>> Stashed changes
 >>>>>>> head
 
-    [Fact(Skip = "Failing in integration tests pipeline with - HTTP 400 (invalid_request_error: billing_hard_limit_reached) error.")]
+    [Fact]
     public async Task OpenAITextToImageDalle3GetImagesTestAsync()
     {
         // Arrange

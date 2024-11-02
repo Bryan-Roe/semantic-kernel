@@ -8,7 +8,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.SemanticKernel.Process.Runtime;
+using Microsoft.SemanticKernel.Process;
 using Microsoft.VisualStudio.Threading;
 
 namespace Microsoft.SemanticKernel;
@@ -24,6 +24,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     internal readonly List<KernelProcessStepInfo> _stepsInfos;
     internal readonly List<LocalStep> _steps = [];
     internal readonly KernelProcess _process;
+    internal readonly Kernel _kernel;
 
     private readonly ILogger _logger;
     private JoinableTask? _processTask;
@@ -39,9 +40,12 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     internal LocalProcess(KernelProcess process, Kernel kernel, string? parentProcessId = null, ILoggerFactory? loggerFactory = null)
         : base(process, kernel, parentProcessId, loggerFactory)
     {
+        Verify.NotNull(process);
         Verify.NotNull(process.Steps);
+        Verify.NotNull(kernel);
 
         this._stepsInfos = new List<KernelProcessStepInfo>(process.Steps);
+        this._kernel = kernel;
         this._process = process;
         this._initializeTask = new Lazy<ValueTask>(this.InitializeProcessAsync);
         this._externalEventChannel = Channel.CreateUnbounded<KernelProcessEvent>();
@@ -132,14 +136,14 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     }
 
     /// <summary>
-    /// Handles a <see cref="ProcessMessage"/> that has been sent to the process. This happens only in the case
+    /// Handles a <see cref="LocalMessage"/> that has been sent to the process. This happens only in the case
     /// of a process (this one) running as a step within another process (this one's parent). In this case the
     /// entire sub-process should be executed within a single superstep.
     /// </summary>
     /// <param name="message">The message to process.</param>
     /// <returns>A <see cref="Task"/></returns>
     /// <exception cref="KernelException"></exception>
-    internal override async Task HandleMessageAsync(ProcessMessage message)
+    internal override async Task HandleMessageAsync(LocalMessage message)
     {
         if (string.IsNullOrWhiteSpace(message.TargetEventId))
         {
@@ -149,7 +153,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
         }
 
         string eventId = message.TargetEventId!;
-        if (this._outputEdges.TryGetValue(eventId, out List<KernelProcessEdge>? edges) && edges is not null)
+        if (this._outputEdges!.TryGetValue(eventId, out List<KernelProcessEdge>? edges) && edges is not null)
         {
             // Create the external event that will be used to start the nested process. Since this event came
             // from outside this processes, we set the visibility to internal so that it's not emitted back out again.
@@ -229,7 +233,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     private async Task Internal_ExecuteAsync(Kernel? kernel = null, int maxSupersteps = 100, bool keepAlive = true, CancellationToken cancellationToken = default)
     {
         Kernel localKernel = kernel ?? this._kernel;
-        Queue<ProcessMessage> messageChannel = new();
+        Queue<LocalMessage> messageChannel = new();
 
         try
         {
@@ -299,11 +303,11 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     }
 
     /// <summary>
-    /// Processes external events that have been sent to the process, translates them to <see cref="ProcessMessage"/>s, and enqueues
+    /// Processes external events that have been sent to the process, translates them to <see cref="LocalMessage"/>s, and enqueues
     /// them to the provided message channel so that they can be processed in the next superstep.
     /// </summary>
     /// <param name="messageChannel">The message channel where messages should be enqueued.</param>
-    private void EnqueueExternalMessages(Queue<ProcessMessage> messageChannel)
+    private void EnqueueExternalMessages(Queue<LocalMessage> messageChannel)
     {
         while (this._externalEventChannel.Reader.TryRead(out var externalEvent))
         {
@@ -311,7 +315,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
             {
                 foreach (var edge in edges)
                 {
-                    ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, externalEvent.Data);
+                    LocalMessage message = LocalMessageFactory.CreateFromEdge(edge, externalEvent.Data);
                     messageChannel.Enqueue(message);
                 }
             }
@@ -319,12 +323,12 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     }
 
     /// <summary>
-    /// Processes events emitted by the given step in the last superstep, translates them to <see cref="ProcessMessage"/>s, and enqueues
+    /// Processes events emitted by the given step in the last superstep, translates them to <see cref="LocalMessage"/>s, and enqueues
     /// them to the provided message channel so that they can be processed in the next superstep.
     /// </summary>
     /// <param name="step">The step containing outgoing events to process.</param>
     /// <param name="messageChannel">The message channel where messages should be enqueued.</param>
-    private void EnqueueStepMessages(LocalStep step, Queue<ProcessMessage> messageChannel)
+    private void EnqueueStepMessages(LocalStep step, Queue<LocalMessage> messageChannel)
     {
         var allStepEvents = step.GetAllEvents();
         foreach (var stepEvent in allStepEvents)
@@ -338,7 +342,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
             // Get the edges for the event and queue up the messages to be sent to the next steps.
             foreach (var edge in step.GetEdgeForEvent(stepEvent.Id!))
             {
-                ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, stepEvent.Data);
+                LocalMessage message = LocalMessageFactory.CreateFromEdge(edge, stepEvent.Data);
                 messageChannel.Enqueue(message);
             }
         }

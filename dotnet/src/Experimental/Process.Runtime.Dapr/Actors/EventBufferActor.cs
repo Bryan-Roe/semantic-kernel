@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapr.Actors.Runtime;
-using Microsoft.SemanticKernel.Process.Runtime;
 
 namespace Microsoft.SemanticKernel;
 
@@ -13,7 +12,8 @@ namespace Microsoft.SemanticKernel;
 /// </summary>
 internal class EventBufferActor : Actor, IEventBuffer
 {
-    private Queue<ProcessEvent>? _queue = new();
+    private const string EventQueueState = "DaprEventBufferState";
+    private Queue<DaprEvent>? _queue = new();
 
     /// <summary>
     /// Required constructor for Dapr Actor.
@@ -26,26 +26,26 @@ internal class EventBufferActor : Actor, IEventBuffer
     /// <summary>
     /// Dequeues an event.
     /// </summary>
-    /// <returns>A <see cref="List{T}"/> where T is <see cref="ProcessEvent"/></returns>
-    public async Task<List<ProcessEvent>> DequeueAllAsync()
+    /// <returns>A <see cref="List{T}"/> where T is <see cref="DaprEvent"/></returns>
+    public async Task<List<DaprEvent>> DequeueAllAsync()
     {
         // Dequeue and clear the queue.
         var items = this._queue!.ToList();
         this._queue!.Clear();
 
         // Save the state.
-        await this.StateManager.SetStateAsync(ActorStateKeys.EventQueueState, this._queue).ConfigureAwait(false);
+        await this.StateManager.SetStateAsync(EventQueueState, this._queue).ConfigureAwait(false);
         await this.StateManager.SaveStateAsync().ConfigureAwait(false);
 
         return items;
     }
 
-    public async Task EnqueueAsync(ProcessEvent stepEvent)
+    public async Task EnqueueAsync(DaprEvent stepEvent)
     {
         this._queue!.Enqueue(stepEvent);
 
         // Save the state.
-        await this.StateManager.SetStateAsync(ActorStateKeys.EventQueueState, this._queue).ConfigureAwait(false);
+        await this.StateManager.SetStateAsync(EventQueueState, this._queue).ConfigureAwait(false);
         await this.StateManager.SaveStateAsync().ConfigureAwait(false);
     }
 
@@ -55,14 +55,14 @@ internal class EventBufferActor : Actor, IEventBuffer
     /// <returns>A <see cref="Task"/></returns>
     protected override async Task OnActivateAsync()
     {
-        var eventQueueState = await this.StateManager.TryGetStateAsync<Queue<ProcessEvent>>(ActorStateKeys.EventQueueState).ConfigureAwait(false);
+        var eventQueueState = await this.StateManager.TryGetStateAsync<Queue<DaprEvent>>(EventQueueState).ConfigureAwait(false);
         if (eventQueueState.HasValue)
         {
             this._queue = eventQueueState.Value;
         }
         else
         {
-            this._queue = new Queue<ProcessEvent>();
+            this._queue = new Queue<DaprEvent>();
         }
     }
 }

@@ -62,4 +62,4 @@ class GoogleAIChatPromptExecutionSettings(GoogleAIPromptExecutionSettings):
 class GoogleAIEmbeddingPromptExecutionSettings(PromptExecutionSettings):
     """Google AI Embedding Prompt Execution Settings."""
 
-    output_dimensionality: int | None = Field(None, le=768)
+    output_dimensionality: int | None = None
