@@ -16,6 +16,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Agents.OpenAI" Version="1.21.1-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.0.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Agents" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
