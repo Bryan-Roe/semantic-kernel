@@ -274,7 +274,9 @@ internal partial class ClientCore
                 requestIndex,
                 (FunctionCallContent content) => IsRequestableTool(chatOptions.Tools, content),
                 kernel,
+                isStreaming: false,
                 cancellationToken).ConfigureAwait(false);
+
             if (lastMessage != null)
             {
                 return [lastMessage];
@@ -554,10 +556,14 @@ internal partial class ClientCore
                                     continue;
                                 }
 
+                                string streamingArguments = (functionCallUpdate.FunctionArgumentsUpdate?.ToMemory().IsEmpty ?? true)
+                                    ? string.Empty
+                                    : functionCallUpdate.FunctionArgumentsUpdate.ToString();
+
                                 openAIStreamingChatMessageContent.Items.Add(new StreamingFunctionCallUpdateContent(
                                     callId: functionCallUpdate.ToolCallId,
                                     name: functionCallUpdate.FunctionName,
-                                    arguments: functionCallUpdate.FunctionArgumentsUpdate?.ToString(),
+                                    arguments: streamingArguments,
                                     functionCallIndex: functionCallUpdate.Index));
                             }
                         }
@@ -625,7 +631,9 @@ internal partial class ClientCore
                 requestIndex,
                 (FunctionCallContent content) => IsRequestableTool(chatOptions.Tools, content),
                 kernel,
+                isStreaming: true,
                 cancellationToken).ConfigureAwait(false);
+
             if (lastMessage != null)
             {
                 yield return new OpenAIStreamingChatMessageContent(lastMessage.Role, lastMessage.Content);
@@ -820,7 +828,7 @@ internal partial class ClientCore
             Seed = executionSettings.Seed,
             EndUserId = executionSettings.User,
             TopLogProbabilityCount = executionSettings.TopLogprobs,
-            IncludeLogProbabilities = executionSettings.Logprobs,
+            IncludeLogProbabilities = executionSettings.Logprobs
         };
 
         var responseFormat = GetResponseFormat(executionSettings);
@@ -871,6 +879,11 @@ internal partial class ClientCore
             }
         }
 
+        if (toolCallingConfig.Options?.AllowParallelCalls is not null)
+        {
+            options.AllowParallelToolCalls = toolCallingConfig.Options.AllowParallelCalls;
+        }
+
         return options;
     }
 
@@ -906,11 +919,9 @@ internal partial class ClientCore
 
             case JsonElement formatElement:
                 // This is a workaround for a type mismatch when deserializing a JSON into an object? type property.
-                // Handling only string formatElement.
                 if (formatElement.ValueKind == JsonValueKind.String)
                 {
-                    string formatString = formatElement.GetString() ?? "";
-                    switch (formatString)
+                    switch (formatElement.GetString())
                     {
                         case "json_object":
                     {
@@ -926,6 +937,8 @@ internal partial class ClientCore
                 }
                             return ChatResponseFormat.CreateJsonObjectFormat();
 
+                        case null:
+                        case "":
                         case "text":
                             return ChatResponseFormat.CreateTextFormat();
                     }
@@ -933,6 +946,10 @@ internal partial class ClientCore
 
 
                 break;
+                return ChatResponseFormat.CreateJsonSchemaFormat(
+                    "JsonSchema",
+                    new BinaryData(Encoding.UTF8.GetBytes(formatElement.ToString())));
+
             case Type formatObjectType:
                 return GetJsonSchemaResponseFormat(formatObjectType);
         }
@@ -961,6 +978,28 @@ internal partial class ClientCore
 
         return ChatResponseFormat.CreateJsonSchemaFormat(type.Name, schemaBinaryData, jsonSchemaIsStrict: true);
         return ChatResponseFormat.CreateJsonSchemaFormat(type.Name, schemaBinaryData, jsonSchemaIsStrict: true);
+        var typeName = GetTypeName(type);
+
+        return ChatResponseFormat.CreateJsonSchemaFormat(typeName, schemaBinaryData, jsonSchemaIsStrict: true);
+    }
+
+    /// <summary>
+    /// Returns a type name concatenated with generic argument type names if they exist.
+    /// </summary>
+    private static string GetTypeName(Type type)
+    {
+        if (!type.IsGenericType)
+        {
+            return type.Name;
+        }
+
+        // If type is generic, base name is followed by ` character.
+        string baseName = type.Name.Substring(0, type.Name.IndexOf('`'));
+
+        Type[] typeArguments = type.GetGenericArguments();
+        string argumentNames = string.Concat(Array.ConvertAll(typeArguments, GetTypeName));
+
+        return $"{baseName}{argumentNames}";
     }
 
     /// <summary>Checks if a tool call is for a function that was defined.</summary>

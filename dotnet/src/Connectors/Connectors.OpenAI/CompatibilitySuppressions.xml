@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 ﻿<CompatibilitySuppressions>                                                                                                                                                      
+=======
+>>>>>>> Stashed changes
 <CompatibilitySuppressions>                                                                                                                                                      
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/package-validation/diagnostic-ids -->

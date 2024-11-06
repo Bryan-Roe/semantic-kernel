@@ -5,56 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-<<<<<<< Updated upstream
-using System.Runtime.CompilerServices;
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel.Diagnostics;
@@ -81,66 +39,6 @@ public abstract class KernelFunction
     /// <summary><see cref="Histogram{T}"/> to record function invocation duration.</summary>
     private static readonly Histogram<double> s_invocationDuration = s_meter.CreateHistogram<double>(
         name: "semantic_kernel.function.invocation.duration",
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-        unit: "s",
-        description: "Measures the duration of a function's execution");
-
-    /// <summary><see cref="Histogram{T}"/> to record function streaming duration.</summary>
-    /// <remarks>
-    /// As this metric spans the full async iterator's lifecycle, it is inclusive of any time
-    /// spent in the consuming code between MoveNextAsync calls on the enumerator.
-    /// </remarks>
-    private static readonly Histogram<double> s_streamingDuration = s_meter.CreateHistogram<double>(
-        name: "semantic_kernel.function.streaming.duration",
-        unit: "s",
-        description: "Measures the duration of a function's streaming execution");
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         unit: "s",
         description: "Measures the duration of a function's execution");
 
@@ -155,34 +53,7 @@ public abstract class KernelFunction
         description: "Measures the duration of a function's streaming execution");
 
     /// <summary>The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</summary>
-    private readonly JsonSerializerOptions? _jsonSerializerOptions;
-<<<<<<< Updated upstream
-
-    /// <summary>The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</summary>
-    private readonly JsonSerializerOptions? _jsonSerializerOptions;
-
-    /// <summary>The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</summary>
-    private readonly JsonSerializerOptions? _jsonSerializerOptions;
     protected JsonSerializerOptions? JsonSerializerOptions { get; set; }
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
     /// <summary>
     /// Gets the name of the function.
@@ -225,28 +96,6 @@ public abstract class KernelFunction
     /// The instances of <see cref="PromptExecutionSettings"/> are frozen and cannot be modified.
     /// </remarks>
     public IReadOnlyDictionary<string, PromptExecutionSettings>? ExecutionSettings { get; }
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
->>>>>>> Stashed changes
 
     /// <summary>
     /// Initializes a new instance of the <see cref="KernelFunction"/> class.
@@ -265,111 +114,6 @@ public abstract class KernelFunction
         : this(name, null, description, parameters, returnParameter, executionSettings)
     {
     }
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="KernelFunction"/> class.
-    /// </summary>
-    /// <param name="name">A name of the function to use as its <see cref="KernelFunction.Name"/>.</param>
-    /// <param name="description">The description of the function to use as its <see cref="KernelFunction.Description"/>.</param>
-    /// <param name="parameters">The metadata describing the parameters to the function.</param>
-<<<<<<< Updated upstream
-    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-    /// <param name="returnParameter">The metadata describing the return parameter of the function.</param>
-    /// <param name="executionSettings">
-    /// The <see cref="PromptExecutionSettings"/> to use with the function. These will apply unless they've been
-    /// overridden by settings passed into the invocation of the function.
-    /// </param>
-<<<<<<< Updated upstream
-    internal KernelFunction(string name, string description, IReadOnlyList<KernelParameterMetadata> parameters, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null)
-        : this(name, null, description, parameters, returnParameter, executionSettings)
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    internal KernelFunction(string name, string description, IReadOnlyList<KernelParameterMetadata> parameters, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null)
-        : this(name, null, description, parameters, returnParameter, executionSettings)
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
->>>>>>> Stashed changes
-    internal KernelFunction(string name, string description, IReadOnlyList<KernelParameterMetadata> parameters, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null)
-        : this(name, null, description, parameters, returnParameter, executionSettings)
-    internal KernelFunction(string name, string description, IReadOnlyList<KernelParameterMetadata> parameters, JsonSerializerOptions jsonSerializerOptions, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null)
-        : this(name, null, description, parameters, jsonSerializerOptions, returnParameter, executionSettings)
-<<<<<<< Updated upstream
-    {
-    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="KernelFunction"/> class.
@@ -385,25 +129,6 @@ public abstract class KernelFunction
     /// </param>
     internal KernelFunction(string name, string description, IReadOnlyList<KernelParameterMetadata> parameters, JsonSerializerOptions jsonSerializerOptions, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null)
         : this(name, null, description, parameters, jsonSerializerOptions, returnParameter, executionSettings)
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     {
     }
 
@@ -420,53 +145,8 @@ public abstract class KernelFunction
     /// overridden by settings passed into the invocation of the function.
     /// </param>
     /// <param name="additionalMetadata">Properties/metadata associated with the function itself rather than its parameters and return type.</param>
-<<<<<<< Updated upstream
     [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     internal KernelFunction(string name, string? pluginName, string description, IReadOnlyList<KernelParameterMetadata> parameters, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null, ReadOnlyDictionary<string, object?>? additionalMetadata = null)
     {
         Verify.NotNull(name);
@@ -480,50 +160,6 @@ public abstract class KernelFunction
             ReturnParameter = returnParameter ?? KernelReturnParameterMetadata.Empty,
             AdditionalProperties = additionalMetadata ?? KernelFunctionMetadata.s_emptyDictionary,
         };
-<<<<<<< Updated upstream
-
-        if (executionSettings is not null)
-        {
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-
-        if (executionSettings is not null)
-        {
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
         if (executionSettings is not null)
         {
@@ -534,26 +170,6 @@ public abstract class KernelFunction
     }
 
     /// <summary>
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     /// Initializes a new instance of the <see cref="KernelFunction"/> class.
     /// </summary>
     /// <param name="name">A name of the function to use as its <see cref="KernelFunction.Name"/>.</param>
@@ -589,36 +205,10 @@ public abstract class KernelFunction
                 entry => { var clone = entry.Value.Clone(); clone.Freeze(); return clone; });
         }
 
-        this._jsonSerializerOptions = jsonSerializerOptions;
         this.JsonSerializerOptions = jsonSerializerOptions;
     }
 
     /// <summary>
-    }
-
-    /// <summary>
-    }
-
-    /// <summary>
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     /// Invokes the <see cref="KernelFunction"/>.
     /// </summary>
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
@@ -626,53 +216,6 @@ public abstract class KernelFunction
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
     /// <returns>The result of the function's execution.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is null.</exception>
-<<<<<<< Updated upstream
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public async Task<FunctionResult> InvokeAsync(
         Kernel kernel,
         KernelArguments? arguments = null,
@@ -685,69 +228,9 @@ public abstract class KernelFunction
 
         // Ensure arguments are initialized.
         arguments ??= [];
-        logger.LogFunctionInvoking(this.Name);
-<<<<<<< Updated upstream
-        logger.LogFunctionArguments(arguments);
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        logger.LogFunctionArguments(arguments);
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
->>>>>>> Stashed changes
-        logger.LogFunctionArguments(arguments);
+        logger.LogFunctionInvoking(this.PluginName, this.Name);
 
-        if (this._jsonSerializerOptions is not null)
-        {
-            logger.LogFunctionArguments(arguments, this._jsonSerializerOptions);
-
-        if (this._jsonSerializerOptions is not null)
-        {
-            logger.LogFunctionArguments(arguments, this._jsonSerializerOptions);
-        }
-        else
-        {
-            logger.LogFunctionArguments(arguments);
-        }
-        else
-        {
-            logger.LogFunctionArguments(arguments);
-        }
-<<<<<<< Updated upstream
-        this.LogFunctionArguments(logger, arguments);
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+        this.LogFunctionArguments(logger, this.PluginName, this.Name, arguments);
 
         TagList tags = new() { { MeasurementFunctionTagName, this.Name } };
         long startingTimestamp = Stopwatch.GetTimestamp();
@@ -767,7 +250,7 @@ public abstract class KernelFunction
                 throw new OperationCanceledException($"A {nameof(Kernel)}.{nameof(Kernel.FunctionInvoking)} event handler requested cancellation before function invocation.");
             }
 
-            var invocationContext = await kernel.OnFunctionInvocationAsync(this, arguments, functionResult, async (context) =>
+            var invocationContext = await kernel.OnFunctionInvocationAsync(this, arguments, functionResult, isStreaming: false, async (context) =>
             {
                 // Invoking the function and updating context with result.
                 context.Result = functionResult = await this.InvokeCoreAsync(kernel, context.Arguments, cancellationToken).ConfigureAwait(false);
@@ -792,61 +275,9 @@ public abstract class KernelFunction
                 throw new OperationCanceledException($"A {nameof(Kernel)}.{nameof(Kernel.FunctionInvoked)} event handler requested cancellation after function invocation.");
             }
 
-            logger.LogFunctionInvokedSuccess(this.Name);
-<<<<<<< Updated upstream
-            logger.LogFunctionResultValue(functionResult);
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            logger.LogFunctionResultValue(functionResult);
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
->>>>>>> Stashed changes
-            logger.LogFunctionResultValue(functionResult);
-            logger.LogFunctionResultValue(functionResult);
-            if (this._jsonSerializerOptions is not null)
-            {
-                logger.LogFunctionResultValue(functionResult, this._jsonSerializerOptions);
-            }
-            else
-            {
-                logger.LogFunctionResultValue(functionResult);
-            }
-<<<<<<< Updated upstream
-            this.LogFunctionResult(logger, functionResult);
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+            logger.LogFunctionInvokedSuccess(this.PluginName, this.Name);
+
+            this.LogFunctionResult(logger, this.PluginName, this.Name, functionResult);
 
             return functionResult;
         }
@@ -860,7 +291,7 @@ public abstract class KernelFunction
             // Record the invocation duration metric and log the completion.
             TimeSpan duration = new((long)((Stopwatch.GetTimestamp() - startingTimestamp) * (10_000_000.0 / Stopwatch.Frequency)));
             s_invocationDuration.Record(duration.TotalSeconds, in tags);
-            logger.LogFunctionComplete(duration.TotalSeconds);
+            logger.LogFunctionComplete(this.PluginName, this.Name, duration.TotalSeconds);
         }
     }
 
@@ -874,51 +305,6 @@ public abstract class KernelFunction
     /// <returns>The result of the function's execution, cast to <typeparamref name="TResult"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is null.</exception>
     /// <exception cref="InvalidCastException">The function's result could not be cast to <typeparamref name="TResult"/>.</exception>
-<<<<<<< Updated upstream
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public async Task<TResult?> InvokeAsync<TResult>(
         Kernel kernel,
         KernelArguments? arguments = null,
@@ -939,53 +325,6 @@ public abstract class KernelFunction
     /// The function will not be invoked until an enumerator is retrieved from the returned <see cref="IAsyncEnumerable{T}"/>
     /// and its iteration initiated via an initial call to <see cref="IAsyncEnumerator{T}.MoveNextAsync"/>.
     /// </remarks>
-<<<<<<< Updated upstream
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public IAsyncEnumerable<StreamingKernelContent> InvokeStreamingAsync(
         Kernel kernel,
         KernelArguments? arguments = null,
@@ -1005,53 +344,6 @@ public abstract class KernelFunction
     /// The function will not be invoked until an enumerator is retrieved from the returned <see cref="IAsyncEnumerable{T}"/>
     /// and its iteration initiated via an initial call to <see cref="IAsyncEnumerator{T}.MoveNextAsync"/>.
     /// </remarks>
-<<<<<<< Updated upstream
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection, if created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public async IAsyncEnumerable<TResult> InvokeStreamingAsync<TResult>(
         Kernel kernel,
         KernelArguments? arguments = null,
@@ -1063,99 +355,13 @@ public abstract class KernelFunction
         ILogger logger = kernel.LoggerFactory.CreateLogger(this.Name) ?? NullLogger.Instance;
 
         arguments ??= [];
-        logger.LogFunctionStreamingInvoking(this.Name);
-<<<<<<< Updated upstream
+        logger.LogFunctionStreamingInvoking(this.PluginName, this.Name);
 
-        arguments ??= [];
-        logger.LogFunctionStreamingInvoking(this.Name);
-
-        arguments ??= [];
-        logger.LogFunctionStreamingInvoking(this.Name);
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-        logger.LogFunctionArguments(arguments);
+        this.LogFunctionArguments(logger, this.PluginName, this.Name, arguments);
 
         TagList tags = new() { { MeasurementFunctionTagName, this.Name } };
         long startingTimestamp = Stopwatch.GetTimestamp();
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-
-        if (this._jsonSerializerOptions is not null)
-        {
-            logger.LogFunctionArguments(arguments, this._jsonSerializerOptions);
-        }
-        else
-        {
-            logger.LogFunctionArguments(arguments);
-        }
-
-        TagList tags = new() { { MeasurementFunctionTagName, this.Name } };
-        long startingTimestamp = Stopwatch.GetTimestamp();
-
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         try
         {
             IAsyncEnumerator<TResult> enumerator;
@@ -1176,31 +382,10 @@ public abstract class KernelFunction
 
                 FunctionResult functionResult = new(this, culture: kernel.Culture);
 
-                var invocationContext = await kernel.OnFunctionInvocationAsync(this, arguments, functionResult, (context) =>
+                var invocationContext = await kernel.OnFunctionInvocationAsync(this, arguments, functionResult, isStreaming: true, (context) =>
                 {
                     // Invoke the function and get its streaming enumerable.
                     var enumerable = this.InvokeStreamingCoreAsync<TResult>(kernel, context.Arguments, cancellationToken);
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
->>>>>>> Stashed changes
 
                     // Update context with enumerable as result value.
                     context.Result = new FunctionResult(this, enumerable, kernel.Culture);
@@ -1222,48 +407,6 @@ public abstract class KernelFunction
                 throw;
             }
 
-<<<<<<< Updated upstream
-=======
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-
-                    // Update context with enumerable as result value.
-                    context.Result = new FunctionResult(this, enumerable, kernel.Culture);
-
-                    return Task.CompletedTask;
-                }, cancellationToken).ConfigureAwait(false);
-
-                // Apply changes from the function filters to final result.
-                var enumerable = invocationContext.Result.GetValue<IAsyncEnumerable<TResult>>() ?? AsyncEnumerable.Empty<TResult>();
-                enumerator = enumerable.GetAsyncEnumerator(cancellationToken);
-
-                // yielding within a try/catch isn't currently supported, so we break out of the try block
-                // in order to then wrap the actual MoveNextAsync in its own try/catch and allow the yielding
-                // to be lifted to be outside of the try/catch.
-            }
-            catch (Exception ex)
-            {
-                HandleException(ex, logger, activity, this, kernel, arguments, result: null, ref tags);
-                throw;
-            }
-
-<<<<<<< Updated upstream
             // Ensure we clean up after the enumerator.
             await using (enumerator.ConfigureAwait(false))
             {
@@ -1293,118 +436,7 @@ public abstract class KernelFunction
             // Record the streaming duration metric and log the completion.
             TimeSpan duration = new((long)((Stopwatch.GetTimestamp() - startingTimestamp) * (10_000_000.0 / Stopwatch.Frequency)));
             s_streamingDuration.Record(duration.TotalSeconds, in tags);
-            logger.LogFunctionStreamingComplete(duration.TotalSeconds);
-        }
-
-        arguments ??= [];
-        logger.LogFunctionStreamingInvoking(this.Name);
-
-        this.LogFunctionArguments(logger, arguments);
-
-        TagList tags = new() { { MeasurementFunctionTagName, this.Name } };
-        long startingTimestamp = Stopwatch.GetTimestamp();
-
-        try
-        {
-            IAsyncEnumerator<TResult> enumerator;
-            try
-            {
-                // Quick check for cancellation after logging about function start but before doing any real work.
-                cancellationToken.ThrowIfCancellationRequested();
-
-                // Invoke pre-invocation event handler. If it requests cancellation, throw.
-#pragma warning disable CS0618 // Events are deprecated
-                var invokingEventArgs = kernel.OnFunctionInvoking(this, arguments);
-#pragma warning restore CS0618 // Events are deprecated
-
-                if (invokingEventArgs?.Cancel is true)
-                {
-                    throw new OperationCanceledException($"A {nameof(Kernel)}.{nameof(Kernel.FunctionInvoking)} event handler requested cancellation before function invocation.");
-                }
-
-                FunctionResult functionResult = new(this, culture: kernel.Culture);
-
-                var invocationContext = await kernel.OnFunctionInvocationAsync(this, arguments, functionResult, (context) =>
-                {
-                    // Invoke the function and get its streaming enumerable.
-                    var enumerable = this.InvokeStreamingCoreAsync<TResult>(kernel, context.Arguments, cancellationToken);
-
-                    // Update context with enumerable as result value.
-                    context.Result = new FunctionResult(this, enumerable, kernel.Culture);
-
-                    return Task.CompletedTask;
-                }, cancellationToken).ConfigureAwait(false);
-
-                // Apply changes from the function filters to final result.
-                var enumerable = invocationContext.Result.GetValue<IAsyncEnumerable<TResult>>() ?? AsyncEnumerable.Empty<TResult>();
-                enumerator = enumerable.GetAsyncEnumerator(cancellationToken);
-
-                // yielding within a try/catch isn't currently supported, so we break out of the try block
-                // in order to then wrap the actual MoveNextAsync in its own try/catch and allow the yielding
-                // to be lifted to be outside of the try/catch.
-            }
-            catch (Exception ex)
-            {
-                HandleException(ex, logger, activity, this, kernel, arguments, result: null, ref tags);
-                throw;
-            }
-
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-            // Ensure we clean up after the enumerator.
-            await using (enumerator.ConfigureAwait(false))
-            {
-                while (true)
-                {
-                    try
-                    {
-                        // Move to the next streaming result.
-                        if (!await enumerator.MoveNextAsync().ConfigureAwait(false))
-                        {
-                            break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        HandleException(ex, logger, activity, this, kernel, arguments, result: null, ref tags);
-                        throw;
-                    }
-
-                    // Yield the next streaming result.
-                    yield return enumerator.Current;
-                }
-            }
-        }
-        finally
-        {
-            // Record the streaming duration metric and log the completion.
-            TimeSpan duration = new((long)((Stopwatch.GetTimestamp() - startingTimestamp) * (10_000_000.0 / Stopwatch.Frequency)));
-            s_streamingDuration.Record(duration.TotalSeconds, in tags);
-            logger.LogFunctionStreamingComplete(duration.TotalSeconds);
+            logger.LogFunctionStreamingComplete(this.PluginName, this.Name, duration.TotalSeconds);
         }
     }
 
@@ -1461,7 +493,7 @@ public abstract class KernelFunction
         // Log the exception and add its type to the tags that'll be included with recording the invocation duration.
         tags.Add(MeasurementErrorTagName, ex.GetType().FullName);
         activity?.SetError(ex);
-        logger.LogFunctionError(ex, ex.Message);
+        logger.LogFunctionError(kernelFunction.PluginName, kernelFunction.Name, ex, ex.Message);
 
         // If the exception is an OperationCanceledException, wrap it in a KernelFunctionCanceledException
         // in order to convey additional details about what function was canceled. This is particularly
@@ -1481,29 +513,104 @@ public abstract class KernelFunction
 
     [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "The warning is shown and should be addressed at the function creation site; there is no need to show it again at the function invocation sites.")]
     [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "The warning is shown and should be addressed at the function creation site; there is no need to show it again at the function invocation sites.")]
-    private void LogFunctionArguments(ILogger logger, KernelArguments arguments)
+    private void LogFunctionArguments(ILogger logger, string? pluginName, string functionName, KernelArguments arguments)
     {
         if (this.JsonSerializerOptions is not null)
         {
-            logger.LogFunctionArguments(arguments, this.JsonSerializerOptions);
+            logger.LogFunctionArguments(pluginName, functionName, arguments, this.JsonSerializerOptions);
         }
         else
         {
-            logger.LogFunctionArguments(arguments);
+            logger.LogFunctionArguments(pluginName, functionName, arguments);
         }
     }
 
     [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "The warning is shown and should be addressed at the function creation site; there is no need to show it again at the function invocation sites.")]
     [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "The warning is shown and should be addressed at the function creation site; there is no need to show it again at the function invocation sites.")]
-    private void LogFunctionResult(ILogger logger, FunctionResult functionResult)
+    private void LogFunctionResult(ILogger logger, string? pluginName, string functionName, FunctionResult functionResult)
     {
         if (this.JsonSerializerOptions is not null)
         {
-            logger.LogFunctionResultValue(functionResult, this.JsonSerializerOptions);
+            logger.LogFunctionResultValue(pluginName, functionName, functionResult, this.JsonSerializerOptions);
         }
         else
         {
-            logger.LogFunctionResultValue(functionResult);
+            logger.LogFunctionResultValue(pluginName, functionName, functionResult);
+        }
+    }
+
+    /// <summary>Creates an <see cref="AIFunction"/> for this <see cref="KernelFunction"/>.</summary>
+    /// <param name="kernel">
+    /// The <see cref="Kernel"/> instance to pass to the <see cref="KernelFunction"/> when it's invoked as part of the <see cref="AIFunction"/>'s invocation.
+    /// </param>
+    /// <returns>An instance of <see cref="AIFunction"/> that, when invoked, will in turn invoke the current <see cref="KernelFunction"/>.</returns>
+    [Experimental("SKEXP0001")]
+    public AIFunction AsAIFunction(Kernel? kernel = null)
+    {
+        return new KernelAIFunction(this, kernel);
+    }
+
+    /// <summary>An <see cref="AIFunction"/> wrapper around a <see cref="KernelFunction"/>.</summary>
+    private sealed class KernelAIFunction : AIFunction
+    {
+        private readonly KernelFunction _kernelFunction;
+        private readonly Kernel? _kernel;
+
+        public KernelAIFunction(KernelFunction kernelFunction, Kernel? kernel)
+        {
+            this._kernelFunction = kernelFunction;
+            this._kernel = kernel;
+
+            string name = string.IsNullOrWhiteSpace(kernelFunction.PluginName) ?
+                kernelFunction.Name :
+                $"{kernelFunction.PluginName}_{kernelFunction.Name}";
+
+            this.Metadata = new AIFunctionMetadata(name)
+            {
+                Description = kernelFunction.Description,
+
+                JsonSerializerOptions = kernelFunction.JsonSerializerOptions,
+
+                Parameters = kernelFunction.Metadata.Parameters.Select(p => new AIFunctionParameterMetadata(p.Name)
+                {
+                    Description = p.Description,
+                    ParameterType = p.ParameterType,
+                    IsRequired = p.IsRequired,
+                    HasDefaultValue = p.DefaultValue is not null,
+                    DefaultValue = p.DefaultValue,
+                    Schema = p.Schema?.RootElement,
+                }).ToList(),
+
+                ReturnParameter = new AIFunctionReturnParameterMetadata()
+                {
+                    Description = kernelFunction.Metadata.ReturnParameter.Description,
+                    ParameterType = kernelFunction.Metadata.ReturnParameter.ParameterType,
+                    Schema = kernelFunction.Metadata.ReturnParameter.Schema?.RootElement,
+                },
+            };
+        }
+
+        public override AIFunctionMetadata Metadata { get; }
+
+        protected override async Task<object?> InvokeCoreAsync(
+            IEnumerable<KeyValuePair<string, object?>> arguments, CancellationToken cancellationToken)
+        {
+            Verify.NotNull(arguments);
+
+            // Create the KernelArguments from the supplied arguments.
+            KernelArguments args = [];
+            foreach (var argument in arguments)
+            {
+                args[argument.Key] = argument.Value;
+            }
+
+            // Invoke the KernelFunction.
+            var functionResult = await this._kernelFunction.InvokeAsync(this._kernel ?? new(), args, cancellationToken).ConfigureAwait(false);
+
+            // Serialize the result to JSON, as with AIFunctionFactory.Create AIFunctions.
+            return functionResult.Value is object value ?
+                JsonSerializer.SerializeToElement(value, AbstractionsJsonContext.GetTypeInfo(value.GetType(), this._kernelFunction.JsonSerializerOptions)) :
+                null;
         }
     }
 }

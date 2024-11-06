@@ -30,11 +30,17 @@ public sealed class PineconeVectorStoreRecordCollection<TRecord> : IVectorStoreR
     private const string UpsertOperationName = "Upsert";
     private const string DeleteOperationName = "Delete";
     private const string GetOperationName = "Get";
+<<<<<<< Updated upstream
 
     private const string QueryOperationName = "Query";
 
     private static readonly VectorSearchOptions s_defaultVectorSearchOptions = new();
 
+=======
+    private const string QueryOperationName = "Query";
+
+    private static readonly VectorSearchOptions s_defaultVectorSearchOptions = new();
+>>>>>>> Stashed changes
     private const string QueryOperationName = "Query";
 
     private static readonly VectorSearchOptions s_defaultVectorSearchOptions = new();
@@ -73,7 +79,10 @@ public sealed class PineconeVectorStoreRecordCollection<TRecord> : IVectorStoreR
         if (this._options.VectorCustomMapper is null)
         {
             this._mapper = new PineconeVectorStoreRecordMapper<TRecord>(this._vectorStoreRecordDefinition);
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
         this._propertyReader = new VectorStoreRecordPropertyReader(
             typeof(TRecord),
             this._options.VectorStoreRecordDefinition,
@@ -113,7 +122,10 @@ public sealed class PineconeVectorStoreRecordCollection<TRecord> : IVectorStoreR
     public async Task CreateCollectionAsync(CancellationToken cancellationToken = default)
     {
         // we already run through record property validation, so a single VectorStoreRecordVectorProperty is guaranteed.
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         var vectorProperty = this._vectorStoreRecordDefinition.Properties.OfType<VectorStoreRecordVectorProperty>().First();
         var vectorProperty = this._vectorStoreRecordDefinition.Properties.OfType<VectorStoreRecordVectorProperty>().First();
         var vectorProperty = this._propertyReader.VectorProperty!;
@@ -180,6 +192,10 @@ public sealed class PineconeVectorStoreRecordCollection<TRecord> : IVectorStoreR
             () => results.Values.Select(x => this._mapper.MapFromStorageToDataModel(x, mapperOptions)).ToList());
             () => results.Values.Select(x => this._mapper.MapFromStorageToDataModel(x, mapperOptions)));
             () => results.Values.Select(x => this._mapper.MapFromStorageToDataModel(x, mapperOptions)));
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
         foreach (var record in records)
         {
             yield return record;
