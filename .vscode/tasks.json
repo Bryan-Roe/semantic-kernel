@@ -19,7 +19,7 @@
       "detail": "Install ReSharper Global Tools",
       "command": "dotnet",
       "type": "process",
-      "args": ["new", "tool-manifest"],
+      "args": ["new", "tool-manifest", "/consoleloggerparameters:NoSummary"],
       "options": {
         "cwd": "${workspaceFolder}/dotnet"
       }
@@ -96,17 +96,14 @@
       "command": "host start",
       "isBackground": true,
       "problemMatcher": "$func-dotnet-watch"
-    }
-    // ****************
-    // Samples (dotnet)
-    // ****************
-    // Kernel Syntax Examples
+    },
     {
-      "label": "build (Concepts)",
+      "label": "build (concepts)",
       "command": "dotnet",
       "type": "process",
       "args": [
-        "build",
+        // Ensures that the debug information is portable across different platforms
+        "/property:DebugType=portable",
         "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary",
@@ -167,7 +164,7 @@
       "logLevel": "debug",
       "appPort": 5000,
       "httpPort": 3500,
-      "dependsOn":["build (ProcessWithDapr)"]
+      "dependsOn": ["build (ProcessWithDapr)"]
     },
     {
       "label": "dapr-down",
