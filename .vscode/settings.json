@@ -106,5 +106,6 @@
   "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.preDeployTask": "publish (functions)",
   "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build",
-  "intelliphp.inlineSuggestionsEnabled": true
+  "intelliphp.inlineSuggestionsEnabled": true,
+  "python.analysis.autoImportCompletions": true
 }
